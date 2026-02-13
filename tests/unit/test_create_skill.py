@@ -88,6 +88,14 @@ class TestCreateSkillSuccess:
         assert '## Command Reference' in content
         assert '## Usage Scenarios' in content
 
+    def test_skill_md_uses_absolute_path(self, tmp_path):
+        """BUG-001 follow-up: generated SKILL.md must use absolute script path."""
+        from scaffold import create_skill
+        create_skill('my-tool', 'A tool', base_dir=str(tmp_path))
+        content = (tmp_path / 'my-tool' / 'SKILL.md').read_text()
+        assert '~/.claude/skills/my-tool/scripts/my_tool.py' in content
+        assert 'python3 scripts/' not in content
+
     def test_creates_script_file(self, tmp_path):
         from scaffold import create_skill
         create_skill('my-tool', 'A tool', base_dir=str(tmp_path))
