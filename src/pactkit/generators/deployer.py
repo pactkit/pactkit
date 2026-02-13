@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -7,7 +8,7 @@ project_root = current_dir.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from pactkit import prompts
+from pactkit import __version__, prompts
 from pactkit.config import (
     VALID_AGENTS,
     VALID_COMMANDS,
@@ -21,14 +22,32 @@ from pactkit.config import (
 from pactkit.skills import load_script
 from pactkit.utils import atomic_write
 
+# Valid output formats
+VALID_FORMATS = ('classic', 'plugin', 'marketplace')
 
-def deploy(config=None, target=None, **_kwargs):
+
+def deploy(config=None, target=None, format="classic", **_kwargs):
     """Deploy PactKit configuration.
 
     Args:
         config: Optional config dict. If None, loads from pactkit.yaml or defaults.
-        target: Optional target directory. If None, uses ~/.claude.
+        target: Optional target directory. If None, uses ~/.claude (classic) or
+                ./pactkit-plugin (plugin) or ./pactkit-marketplace (marketplace).
+        format: Output format — 'classic', 'plugin', or 'marketplace'.
     """
+    if format not in VALID_FORMATS:
+        raise ValueError(f"Unknown format: {format!r}. Valid: {', '.join(VALID_FORMATS)}")
+
+    if format == "plugin":
+        _deploy_plugin(target)
+    elif format == "marketplace":
+        _deploy_marketplace(target)
+    else:
+        _deploy_classic(config, target)
+
+
+def _deploy_classic(config=None, target=None):
+    """Classic deployment — write files to ~/.claude/ (original behavior)."""
     # Resolve target directory
     if target is not None:
         claude_root = Path(target)
@@ -81,6 +100,54 @@ def deploy(config=None, target=None, **_kwargs):
           f"{n_commands}/{total_commands} Commands, "
           f"{n_skills}/{total_skills} Skills, "
           f"{n_rules}/{total_rules} Rules")
+
+
+def _deploy_plugin(target=None):
+    """Plugin deployment — generate a self-contained Claude Code plugin directory."""
+    plugin_root = Path(target) if target else Path("pactkit-plugin")
+
+    print("🚀 PactKit Plugin Deployment")
+
+    # Prepare directories
+    agents_dir = plugin_root / "agents"
+    commands_dir = plugin_root / "commands"
+    skills_dir = plugin_root / "skills"
+    plugin_meta_dir = plugin_root / ".claude-plugin"
+
+    for d in [plugin_root, agents_dir, commands_dir, skills_dir, plugin_meta_dir]:
+        d.mkdir(parents=True, exist_ok=True)
+
+    # Full deployment — all components enabled
+    all_agents = sorted(VALID_AGENTS)
+    all_commands = sorted(VALID_COMMANDS)
+    all_skills = sorted(VALID_SKILLS)
+
+    # Deploy components
+    n_skills = _deploy_skills(skills_dir, all_skills)
+    _deploy_claude_md_inline(plugin_root)
+    n_agents = _deploy_agents(agents_dir, all_agents)
+    n_commands = _deploy_commands(commands_dir, all_commands)
+    _deploy_plugin_json(plugin_meta_dir)
+
+    print(f"\n✅ Plugin: {n_agents} Agents, {n_commands} Commands, "
+          f"{n_skills} Skills → {plugin_root}")
+
+
+def _deploy_marketplace(target=None):
+    """Marketplace deployment — generate a marketplace repo with plugin subdirectory."""
+    marketplace_root = Path(target) if target else Path("pactkit-marketplace")
+    marketplace_root.mkdir(parents=True, exist_ok=True)
+
+    print("🚀 PactKit Marketplace Deployment")
+
+    # Deploy plugin into subdirectory
+    plugin_subdir = marketplace_root / "pactkit-plugin"
+    _deploy_plugin(target=str(plugin_subdir))
+
+    # Generate marketplace.json
+    _deploy_marketplace_json(marketplace_root)
+
+    print(f"\n✅ Marketplace → {marketplace_root}")
 
 
 def _deploy_skills(skills_dir, enabled_skills):
@@ -276,3 +343,75 @@ def _generate_config_if_missing(claude_root):
     yaml_path = claude_root / "pactkit.yaml"
     if not yaml_path.exists():
         atomic_write(yaml_path, generate_default_yaml())
+
+
+# ---------------------------------------------------------------------------
+# Plugin-format helpers
+# ---------------------------------------------------------------------------
+
+def _deploy_plugin_json(plugin_meta_dir):
+    """Generate .claude-plugin/plugin.json manifest."""
+    manifest = {
+        "name": "pactkit",
+        "version": __version__,
+        "description": "Spec-driven agentic DevOps toolkit — PDCA workflows, "
+                       "role-based agents, and behavioral governance for Claude Code",
+        "author": {
+            "name": "PactKit",
+            "url": "https://github.com/pactkit",
+        },
+        "homepage": "https://pactkit.dev",
+        "repository": "https://github.com/pactkit/pactkit",
+        "license": "MIT",
+        "keywords": [
+            "devops", "pdca", "spec-driven", "tdd", "governance",
+            "claude-code", "ai-agent", "multi-agent",
+        ],
+    }
+    content = json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
+    atomic_write(plugin_meta_dir / "plugin.json", content)
+
+
+def _deploy_claude_md_inline(plugin_root):
+    """Generate CLAUDE.md with all rules inlined (no @import references)."""
+    # Build reverse map: rule_id -> key for ordered iteration
+    rule_id_to_key = {}
+    for key, filename in prompts.RULES_FILES.items():
+        rule_id = filename.removesuffix('.md')
+        rule_id_to_key[rule_id] = key
+
+    lines = ["# PactKit Global Constitution (v23.0 Modular)", ""]
+
+    # Inline all rule modules in sorted order
+    for rule_id in sorted(rule_id_to_key.keys()):
+        key = rule_id_to_key[rule_id]
+        module_content = prompts.RULES_MODULES[key].strip()
+        lines.append(module_content)
+        lines.append("")  # blank line between modules
+
+    atomic_write(plugin_root / "CLAUDE.md", "\n".join(lines))
+
+
+def _deploy_marketplace_json(marketplace_root):
+    """Generate marketplace.json for Claude Code plugin marketplace."""
+    manifest = {
+        "name": "pactkit",
+        "owner": {
+            "name": "PactKit",
+        },
+        "metadata": {
+            "description": "Spec-driven agentic DevOps toolkit for Claude Code",
+            "homepage": "https://pactkit.dev",
+        },
+        "plugins": [
+            {
+                "name": "pactkit",
+                "source": "./pactkit-plugin",
+                "version": __version__,
+                "description": "PDCA workflows, role-based agents, "
+                               "and behavioral governance",
+            },
+        ],
+    }
+    content = json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
+    atomic_write(marketplace_root / "marketplace.json", content)

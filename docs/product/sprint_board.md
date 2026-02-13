@@ -39,3 +39,4 @@
 - [x] Remove `--mode` argument and common_user branch from `cli.py`
 - [x] Write unit tests for config module
 - [x] Verify all existing tests still pass (747 passed, 0 failed)
+

@@ -26,6 +26,13 @@ def main():
         default=None,
         help="Custom target directory (default: ~/.claude)",
     )
+    init_parser.add_argument(
+        "--format",
+        type=str,
+        choices=["classic", "plugin", "marketplace"],
+        default="classic",
+        help="Output format: classic (default), plugin, or marketplace",
+    )
 
     # pactkit update (alias for init)
     update_parser = subparsers.add_parser("update", help="Re-deploy PactKit configuration")
@@ -34,6 +41,13 @@ def main():
         type=str,
         default=None,
         help="Custom target directory (default: ~/.claude)",
+    )
+    update_parser.add_argument(
+        "--format",
+        type=str,
+        choices=["classic", "plugin", "marketplace"],
+        default="classic",
+        help="Output format: classic (default), plugin, or marketplace",
     )
 
     # pactkit upgrade (alias for init, migrates legacy scafpy files)
@@ -44,6 +58,13 @@ def main():
         default=None,
         help="Custom target directory (default: ~/.claude)",
     )
+    upgrade_parser.add_argument(
+        "--format",
+        type=str,
+        choices=["classic", "plugin", "marketplace"],
+        default="classic",
+        help="Output format: classic (default), plugin, or marketplace",
+    )
 
     # pactkit version
     subparsers.add_parser("version", help="Show PactKit version")
@@ -52,7 +73,7 @@ def main():
 
     if args.command in ("init", "update", "upgrade"):
         from pactkit.generators.deployer import deploy
-        deploy(target=args.target)
+        deploy(target=args.target, format=args.format)
 
     elif args.command == "version":
         print(f"PactKit v{__version__}")
