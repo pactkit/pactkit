@@ -14,7 +14,6 @@ Verify:
 """
 import importlib
 import warnings
-from pathlib import Path
 
 
 def _config():
