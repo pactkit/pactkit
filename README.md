@@ -1,7 +1,6 @@
 # PactKit
 
 [![PyPI version](https://img.shields.io/pypi/v/pactkit)](https://pypi.org/project/pactkit/)
-[![Downloads](https://img.shields.io/pypi/dm/pactkit)](https://pypi.org/project/pactkit/)
 [![Python](https://img.shields.io/pypi/pyversions/pactkit)](https://pypi.org/project/pactkit/)
 [![CI](https://github.com/pactkit/pactkit/actions/workflows/ci.yml/badge.svg)](https://github.com/pactkit/pactkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
