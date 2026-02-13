@@ -6,6 +6,12 @@
 
 ## ✅ Done
 
+### STORY-003: Init Guard — project-plan / project-doctor 自动检测初始化状态
+- [x] Add Phase 0.5 Init Guard to `project-plan.md` prompt template
+- [x] Add Phase 0.5 Init Guard to `project-doctor.md` prompt template
+- [x] Write unit tests verifying Init Guard text in command templates
+- [x] Verify all existing tests pass (787 passed, 0 failed)
+
 ### STORY-002: Selective Deployment — Deployer 按 Config 过滤部署
 - [x] Modify `deploy()` to accept and use config parameter
 - [x] Implement selective agent deployment with cleanup

@@ -27,6 +27,18 @@ allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
     - If **New Feature**: Focus on `system_design.mmd` (Architecture).
     - If **Modification**: Focus on `/project-trace` (Logic Flow).
 
+## 🛡️ Phase 0.5: Init Guard (Auto-detect)
+> **INSTRUCTION**: Check if the project has been initialized before proceeding.
+1.  **Check Markers**: Verify the existence of ALL three:
+    - `.claude/pactkit.yaml` (project-level config)
+    - `docs/product/sprint_board.md` (sprint board)
+    - `docs/architecture/graphs/` (architecture graph directory)
+2.  **If ANY marker is missing**:
+    - Print: "⚠️ Project not initialized. Running `/project-init` first..."
+    - Execute the full `/project-init` flow to scaffold the missing structure.
+    - After `/project-init` completes, resume this Plan command from Phase 1.
+3.  **If ALL markers exist**: Skip silently to Phase 1.
+
 ## 🎬 Phase 1: Archaeology (The "Know Before You Change" Step)
 1.  **Visual Scan**: Run `visualize` to see the module dependency graph.
     - **Mode Selection**: Use `--mode class` for structure analysis, `--mode call` for logic modification, default for overview.
@@ -392,6 +404,19 @@ allowed-tools: [Read, Bash, Glob]
 > **INSTRUCTION**: Output a `<thinking>` block.
 1.  **Diagnosis**: Is this a configuration drift, missing file, or broken test?
 2.  **Scope**: Local (`.claude/`) vs Project (`src/`).
+
+## 🛡️ Phase 0.5: Init Guard (Auto-detect)
+> **INSTRUCTION**: Check if the project has been initialized before proceeding.
+1.  **Check Markers**: Verify the existence of ALL three:
+    - `.claude/pactkit.yaml` (project-level config)
+    - `docs/product/sprint_board.md` (sprint board)
+    - `docs/architecture/graphs/` (architecture graph directory)
+2.  **If ANY marker is missing**:
+    - Print: "⚠️ Project not initialized. Missing markers detected."
+    - Ask the user to choose: **(a)** Auto-fix by running `/project-init`, or **(b)** Continue diagnosis without initialization.
+    - If the user chooses **(a)**: Execute `/project-init`, then resume Doctor from Phase 1.
+    - If the user chooses **(b)**: Proceed to Phase 1 and include the missing markers in the health report.
+3.  **If ALL markers exist**: Skip silently to Phase 1.
 
 ## 🎬 Phase 1: Structural Health
 1.  **Scan**: Run `python3 ~/.claude/skills/pactkit-visualize/scripts/visualize.py visualize`.
