@@ -211,7 +211,7 @@ Only add a Legend when the user explicitly requests one, or when the diagram use
 ## XML Template (Landscape, No Legend)
 {M}xml
 <mxfile host="Electron" agent="PactKit-v20.0" version="26.2.2">
-  <diagram name="Architecture" id="SCAFPY_ARCH">
+  <diagram name="Architecture" id="PACTKIT_ARCH">
     <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />

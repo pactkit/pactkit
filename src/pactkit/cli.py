@@ -36,12 +36,21 @@ def main():
         help="Custom target directory (default: ~/.claude)",
     )
 
+    # pactkit upgrade (alias for init, migrates legacy scafpy files)
+    upgrade_parser = subparsers.add_parser("upgrade", help="Upgrade PactKit (migrate legacy scafpy config)")
+    upgrade_parser.add_argument(
+        "-t", "--target",
+        type=str,
+        default=None,
+        help="Custom target directory (default: ~/.claude)",
+    )
+
     # pactkit version
     subparsers.add_parser("version", help="Show PactKit version")
 
     args = parser.parse_args()
 
-    if args.command in ("init", "update"):
+    if args.command in ("init", "update", "upgrade"):
         from pactkit.generators.deployer import deploy
         deploy(target=args.target)
 

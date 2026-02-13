@@ -35,6 +35,9 @@ def deploy(config=None, target=None, **_kwargs):
     else:
         claude_root = Path.home() / ".claude"
 
+    # Migrate legacy scafpy remnants before anything else
+    _migrate_from_scafpy(claude_root)
+
     # Load config if not provided
     if config is None:
         yaml_path = claude_root / "pactkit.yaml"
@@ -124,6 +127,31 @@ def _cleanup_legacy(skills_dir):
     legacy = skills_dir / 'pactkit_tools.py'
     if legacy.exists():
         legacy.unlink()
+
+
+def _migrate_from_scafpy(claude_root):
+    """Migrate legacy scafpy-* remnants to pactkit-* naming.
+
+    - Removes old scafpy-visualize/, scafpy-board/, scafpy-scaffold/ skill dirs
+    - Renames scafpy.yaml → pactkit.yaml (or deletes if pactkit.yaml already exists)
+    """
+    import shutil
+
+    # Clean up legacy skill directories
+    skills_dir = claude_root / "skills"
+    for old_name in ('scafpy-visualize', 'scafpy-board', 'scafpy-scaffold'):
+        old_dir = skills_dir / old_name
+        if old_dir.is_dir():
+            shutil.rmtree(old_dir)
+
+    # Migrate config file
+    old_yaml = claude_root / "scafpy.yaml"
+    new_yaml = claude_root / "pactkit.yaml"
+    if old_yaml.is_file():
+        if not new_yaml.exists():
+            old_yaml.rename(new_yaml)
+        else:
+            old_yaml.unlink()
 
 
 def _deploy_rules(claude_root, enabled_rules):

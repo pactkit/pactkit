@@ -145,3 +145,59 @@ class TestScenario4_UserAgentsPreserved:
 
         assert (agents / "my-custom-agent.md").is_file()
         assert (agents / "my-custom-agent.md").read_text() == "user agent"
+
+
+class TestScenario5_ScafpyMigration:
+    """Scenario 5: scafpy → pactkit 遗留迁移"""
+
+    def test_scafpy_skill_dirs_removed(self, tmp_path):
+        """Old scafpy-* skill directories are cleaned up after deploy."""
+        claude = tmp_path / ".claude"
+        skills = claude / "skills"
+        for name in ['scafpy-visualize', 'scafpy-board', 'scafpy-scaffold']:
+            scripts = skills / name / "scripts"
+            scripts.mkdir(parents=True)
+            (skills / name / "SKILL.md").write_text("old skill")
+            (scripts / "dummy.py").write_text("old script")
+
+        _run_deploy(tmp_path)
+
+        for name in ['scafpy-visualize', 'scafpy-board', 'scafpy-scaffold']:
+            assert not (skills / name).exists(), f"Legacy dir should be removed: {name}"
+
+    def test_scafpy_yaml_renamed_to_pactkit(self, tmp_path):
+        """scafpy.yaml is renamed to pactkit.yaml when pactkit.yaml doesn't exist."""
+        claude = tmp_path / ".claude"
+        claude.mkdir(parents=True)
+        old_yaml = claude / "scafpy.yaml"
+        old_yaml.write_text('version: "1.2.3"\nstack: python\n')
+
+        _run_deploy(tmp_path)
+
+        assert not old_yaml.exists(), "scafpy.yaml should be removed"
+        new_yaml = claude / "pactkit.yaml"
+        assert new_yaml.is_file()
+        content = new_yaml.read_text()
+        assert '1.2.3' in content, "Migrated content should preserve user version"
+
+    def test_scafpy_yaml_deleted_when_both_exist(self, tmp_path):
+        """When both scafpy.yaml and pactkit.yaml exist, scafpy.yaml is deleted."""
+        claude = tmp_path / ".claude"
+        claude.mkdir(parents=True)
+        (claude / "scafpy.yaml").write_text('version: "0.0.1"\n')
+        (claude / "pactkit.yaml").write_text('version: "2.0.0"\n')
+
+        _run_deploy(tmp_path)
+
+        assert not (claude / "scafpy.yaml").exists()
+        assert (claude / "pactkit.yaml").is_file()
+        assert '2.0.0' in (claude / "pactkit.yaml").read_text()
+
+    def test_no_error_when_no_scafpy_remnants(self, tmp_path):
+        """Deploy works fine when no scafpy remnants exist."""
+        claude = _run_deploy(tmp_path)
+        assert claude.is_dir()
+        # No scafpy dirs should exist
+        skills = claude / "skills"
+        for name in ['scafpy-visualize', 'scafpy-board', 'scafpy-scaffold']:
+            assert not (skills / name).exists()
