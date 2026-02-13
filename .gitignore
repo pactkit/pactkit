@@ -36,5 +36,8 @@ docs/architecture/snapshots/
 # Secrets
 .pypirc
 
+# Playwright MCP
+.playwright-mcp/
+
 # Backup
 *.bak
