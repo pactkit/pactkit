@@ -6,6 +6,14 @@
 
 ## ✅ Done
 
+### STORY-004: Project Visibility — GitHub/PyPI/README/Website 曝光度优化
+- [x] Set GitHub topics for pactkit/pactkit (12 topics)
+- [x] Update GitHub description for pactkit/pactkit
+- [x] Set GitHub metadata for pactkit/pactkit.dev (homepage + topics)
+- [x] Update README.md (tagline, remove --mode common, add downloads badge)
+- [x] Update pyproject.toml (keywords + classifier)
+- [x] Optimize website Hero sub-headline
+
 ### STORY-003: Init Guard — project-plan / project-doctor 自动检测初始化状态
 - [x] Add Phase 0.5 Init Guard to `project-plan.md` prompt template
 - [x] Add Phase 0.5 Init Guard to `project-doctor.md` prompt template

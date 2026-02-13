@@ -1,15 +1,25 @@
 # PactKit
 
 [![PyPI version](https://img.shields.io/pypi/v/pactkit)](https://pypi.org/project/pactkit/)
+[![Downloads](https://img.shields.io/pypi/dm/pactkit)](https://pypi.org/project/pactkit/)
 [![Python](https://img.shields.io/pypi/pyversions/pactkit)](https://pypi.org/project/pactkit/)
 [![CI](https://github.com/pactkit/pactkit/actions/workflows/ci.yml/badge.svg)](https://github.com/pactkit/pactkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Spec-driven agentic DevOps toolkit for AI coding assistants.**
+**Ship features with AI agents that follow specs, not vibes.**
 
-> *"Code by Contract"* — Agree on specs before writing code. Let agents execute.
+> PactKit gives Claude Code a structured operating system — 9 specialized agents, 13 commands, and a full Plan-Act-Check-Done lifecycle. One `pip install` and your AI assistant writes specs before code, runs TDD, and never commits without passing tests.
 
-PactKit is an enterprise-grade **agentic DevOps scaffold** that compiles development workflows, role definitions, and behavioral rules into executable "constitutions" and "playbooks" for AI coding assistants.
+### What it looks like
+
+```
+You:  /project-sprint "Add OAuth2 login"
+
+ Plan   System Architect scans codebase, writes Spec, updates Board
+ Act    Senior Developer writes tests first (RED), then code (GREEN)
+ Check  QA Engineer runs 6-phase audit (security + quality + spec alignment)
+ Done   Repo Maintainer gates regression, archives story, commits
+```
 
 ## Why PactKit?
 
@@ -26,16 +36,13 @@ AI coding assistants are powerful but unpredictable without structure. PactKit a
 pip install pactkit
 ```
 
-Requires Python 3.10+. Installs with zero dependencies.
+Requires Python 3.10+ and [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Quick Start
 
 ```bash
-# Deploy Expert mode (full 13 commands + 9 agents + 3 skills)
+# Deploy full toolkit (13 commands + 9 agents + 3 skills)
 pactkit init
-
-# Or deploy lightweight Common mode (4 basic PDCA commands)
-pactkit init --mode common
 
 # Update to latest playbooks (preserves your config)
 pactkit update
