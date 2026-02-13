@@ -19,12 +19,16 @@ graph TD
         Scaffold["scaffold.py<br/>File scaffolding"]
     end
 
-    subgraph "Cross-Session Memory (NEW)"
+    subgraph "Cross-Session Memory"
         Context["context.md<br/>Auto-generated project state"]
         Lessons["lessons.md<br/>Auto-appended decisions"]
         Specs["docs/specs/*.md<br/>Durable requirements"]
         BoardFile["sprint_board.md<br/>Progress tracking"]
         MemoryMCP["Memory MCP<br/>Knowledge graph"]
+    end
+
+    subgraph "MCP Integrations (Conditional)"
+        DrawioMCP["Draw.io MCP<br/>open_drawio_xml/csv/mermaid"]
     end
 
     CLI --> Deployer
@@ -41,6 +45,8 @@ graph TD
     Commands -->|"Plan/Act/Done<br/>conditional"| MemoryMCP
 
     Rules -->|"CLAUDE.md @import"| Context
+    Workflows -->|"Draw command<br/>conditional"| DrawioMCP
 
     style Context fill:#f9f,stroke:#333,stroke-width:2px
     style Lessons fill:#f9f,stroke:#333,stroke-width:2px
+    style DrawioMCP fill:#e6f3ff,stroke:#2980b9,stroke-width:2px

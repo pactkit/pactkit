@@ -12,3 +12,4 @@
 | 2025-02 | Release prep is a good time to catch stale numbers in docs — embed counts as tests to prevent future drift | STORY-010 |
 | 2026-02 | Demoting commands to skills is a prompt-only refactor (no Python scripts needed for prompt-only skills) — but updating 25+ test files with hardcoded counts is the real cost; prefer data-driven assertions | STORY-011 |
 | 2026-02 | Multi-repo docs sync is cheap via gh CLI + git clone/push — but tests reading deployed files (not source) can hide regressions until redeployment | STORY-012 |
+| 2026-02 | Integrating an external MCP server is a prompt-only change — add conditional instructions to rules, skills, agents, and workflows; no runtime code needed. The conditional pattern (IF tool available → use it; ELSE → fallback) is now proven across 6 MCP integrations | STORY-013 |

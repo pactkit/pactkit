@@ -6,6 +6,14 @@
 
 ## ✅ Done
 
+### STORY-013: Draw.io MCP Integration — pactkit-draw 接入官方 MCP 实现即时预览
+- [x] Add Draw.io MCP to rules.py MCP section (R1)
+- [x] Update SKILL_DRAW_MD with conditional MCP mode (R2)
+- [x] Update visual-architect agent prompt (R3)
+- [x] Update DRAW_PROMPT_TEMPLATE with MCP output step (R4)
+- [x] Update system_design.mmd (R5)
+- [x] Write unit tests for STORY-013 (R6)
+
 ### STORY-004: Project Visibility — GitHub/PyPI/README/Website 曝光度优化
 - [x] Set GitHub topics for pactkit/pactkit (12 topics)
 - [x] Update GitHub description for pactkit/pactkit

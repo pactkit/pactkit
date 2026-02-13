@@ -207,6 +207,7 @@ Only add a Legend when the user explicitly requests one, or when the diagram use
 2. **Component List**: Extract components, assign style roles.
 3. **Layout**: Choose the matching layout pattern and compute (x, y) for each node.
 4. **Generate XML**: Write the final `.drawio` file using the template below.
+5. **MCP Preview (Conditional)**: IF `open_drawio_xml` tool is available (Draw.io MCP), call it with the generated XML content to open the diagram in Draw.io editor for instant visual verification. IF Draw.io MCP is not available, skip this step — the `.drawio` file on disk is the sole output.
 
 ## XML Template (Landscape, No Legend)
 {M}xml
