@@ -1,5 +1,10 @@
 # PactKit
 
+[![PyPI version](https://img.shields.io/pypi/v/pactkit)](https://pypi.org/project/pactkit/)
+[![Python](https://img.shields.io/pypi/pyversions/pactkit)](https://pypi.org/project/pactkit/)
+[![CI](https://github.com/pactkit/pactkit/actions/workflows/ci.yml/badge.svg)](https://github.com/pactkit/pactkit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **Spec-driven agentic DevOps toolkit for AI coding assistants.**
 
 > *"Code by Contract"* — Agree on specs before writing code. Let agents execute.
@@ -15,17 +20,28 @@ AI coding assistants are powerful but unpredictable without structure. PactKit a
 - **Full PDCA Lifecycle** — Plan → Act → Check → Done, with quality gates at every stage
 - **Safe by Design** — TDD-first development, safe regression testing, pre-existing test protection
 
+## Installation
+
+```bash
+pip install pactkit
+```
+
+Requires Python 3.10+. Installs with zero dependencies.
+
 ## Quick Start
 
 ```bash
-# Install
-pip install pactkit
-
 # Deploy Expert mode (full 13 commands + 9 agents + 3 skills)
 pactkit init
 
 # Or deploy lightweight Common mode (4 basic PDCA commands)
 pactkit init --mode common
+
+# Update to latest playbooks (preserves your config)
+pactkit update
+
+# Check installed version
+pactkit version
 ```
 
 Then in any project with Claude Code:
@@ -138,6 +154,13 @@ PactKit conditionally integrates with MCP servers when available:
 | Memory | Cross-session knowledge graph | Plan/Act/Done |
 
 All MCP instructions are conditional — gracefully skipped when unavailable.
+
+## Upgrading
+
+```bash
+pip install --upgrade pactkit
+pactkit update
+```
 
 ## Contributing
 
