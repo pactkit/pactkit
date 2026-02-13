@@ -1,8 +1,7 @@
 """Tests for P1: update_task must actually modify sprint_board.md."""
-import pytest
 import textwrap
-from pathlib import Path
 
+import pytest
 
 BOARD_TEMPLATE = textwrap.dedent("""\
 # Sprint Board
@@ -45,6 +44,7 @@ def board_dir(tmp_path):
 def _import_update_task():
     """Import update_task from board.py resource script."""
     import importlib
+
     import pactkit.skills.board as board_mod
     importlib.reload(board_mod)
     return board_mod.update_task

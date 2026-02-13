@@ -1,12 +1,16 @@
 from pactkit.prompts.workflows import (
-    SPRINT_PROMPT, REVIEW_PROMPT, HOTFIX_PROMPT, DESIGN_PROMPT,
-    DRAW_PROMPT_TEMPLATE, TRACE_PROMPT,
+    DESIGN_PROMPT,
+    DRAW_PROMPT_TEMPLATE,
+    HOTFIX_PROMPT,
+    REVIEW_PROMPT,
+    SPRINT_PROMPT,
+    TRACE_PROMPT,
 )
 
 COMMANDS_CONTENT = {
     "project-draw.md": DRAW_PROMPT_TEMPLATE,
     "project-trace.md": TRACE_PROMPT,
-    
+
     "project-plan.md": """---
 description: "Analyze requirements, create Spec and Story"
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]

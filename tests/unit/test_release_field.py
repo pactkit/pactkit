@@ -1,9 +1,9 @@
 """Tests for STORY-027: Add Release Field to Spec Template."""
-import pytest
 
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p

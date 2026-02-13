@@ -4,6 +4,7 @@ import pytest
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p
@@ -108,7 +109,8 @@ class TestDoneIncrementalOnLeaf:
         p = _prompts()
         done = p.COMMANDS_CONTENT['project-done.md']
         lower = done.lower()
-        assert ('full regression' in lower or 'full suite' in lower) and (
+        assert ('full regression' in lower or 'full suite' in lower)
+        assert (
             'incremental' in lower or 'related test' in lower
         )
 
@@ -124,7 +126,8 @@ class TestDoneFullOnVersionChange:
         p = _prompts()
         done = p.COMMANDS_CONTENT['project-done.md']
         lower = done.lower()
-        assert 'version' in lower and ('full' in lower or 'regression' in lower)
+        assert 'version' in lower
+        assert ('full' in lower or 'regression' in lower)
 
     def test_done_mentions_pactkit_yaml(self):
         """Done should reference pactkit.yaml for version detection."""
@@ -148,7 +151,8 @@ class TestLangProfilesTestMap:
     def test_python_pattern_correct(self):
         p = _prompts()
         pattern = p.LANG_PROFILES['python']['test_map_pattern']
-        assert 'test_' in pattern and '{module}' in pattern
+        assert 'test_' in pattern
+        assert '{module}' in pattern
 
 
 # ==============================================================================

@@ -1,6 +1,4 @@
-import pytest
 import sys
-import re
 from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent.parent

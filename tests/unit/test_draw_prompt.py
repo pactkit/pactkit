@@ -1,4 +1,3 @@
-import pytest
 import re
 import sys
 from pathlib import Path
@@ -99,7 +98,8 @@ class TestAntiBugRules:
     def test_id_uniqueness_rule(self):
         from pactkit.prompts import DRAW_PROMPT_TEMPLATE
         lower = DRAW_PROMPT_TEMPLATE.lower()
-        assert 'id' in lower and ('unique' in lower or 'duplicate' in lower or '唯一' in DRAW_PROMPT_TEMPLATE)
+        assert 'id' in lower
+        assert ('unique' in lower or 'duplicate' in lower or '唯一' in DRAW_PROMPT_TEMPLATE)
 
     def test_parent_reference_rule(self):
         from pactkit.prompts import DRAW_PROMPT_TEMPLATE
@@ -109,7 +109,8 @@ class TestAntiBugRules:
     def test_source_target_rule(self):
         from pactkit.prompts import DRAW_PROMPT_TEMPLATE
         lower = DRAW_PROMPT_TEMPLATE.lower()
-        assert 'source' in lower and 'target' in lower
+        assert 'source' in lower
+        assert 'target' in lower
 
 
 class TestLandscapeCanvas:

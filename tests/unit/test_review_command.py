@@ -4,6 +4,7 @@ import pytest
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p

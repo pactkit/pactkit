@@ -1,4 +1,4 @@
-from pactkit.skills import load_script, _SHARED_HEADER
+from pactkit.skills import load_script
 
 # ==============================================================================
 # SKILL SOURCE CODE (loaded from pactkit/skills/)

@@ -6,7 +6,6 @@ Based on reverse-engineering Claude Code v2.1.38 binary Zod schema (Og_):
 
 Plus frontmatter parser fields: name, color, forkContext
 """
-import pytest
 import re
 from pathlib import Path
 

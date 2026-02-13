@@ -1,8 +1,6 @@
 """Tests for STORY-034: Refactor prompts.py into modular package."""
 import importlib
-import pytest
 from pathlib import Path
-
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -89,23 +87,23 @@ class TestAllConstantsAccessible:
         assert isinstance(RULES_FILES, dict)
 
     def test_constitution(self):
-        from pactkit.prompts import CONSTITUTION_EXPERT, CLAUDE_MD_TEMPLATE
+        from pactkit.prompts import CLAUDE_MD_TEMPLATE, CONSTITUTION_EXPERT
         assert isinstance(CONSTITUTION_EXPERT, str)
         assert isinstance(CLAUDE_MD_TEMPLATE, str)
 
     def test_skill_sources(self):
-        from pactkit.prompts import VISUALIZE_SOURCE, BOARD_SOURCE, SCAFFOLD_SOURCE
+        from pactkit.prompts import BOARD_SOURCE, SCAFFOLD_SOURCE, VISUALIZE_SOURCE
         assert isinstance(VISUALIZE_SOURCE, str)
         assert isinstance(BOARD_SOURCE, str)
         assert isinstance(SCAFFOLD_SOURCE, str)
 
     def test_tools(self):
-        from pactkit.prompts import TOOLS_SOURCE, TOOLS_CONTENT
+        from pactkit.prompts import TOOLS_CONTENT, TOOLS_SOURCE
         assert isinstance(TOOLS_SOURCE, str)
         assert isinstance(TOOLS_CONTENT, list)
 
     def test_skill_mds(self):
-        from pactkit.prompts import SKILL_VISUALIZE_MD, SKILL_BOARD_MD, SKILL_SCAFFOLD_MD
+        from pactkit.prompts import SKILL_BOARD_MD, SKILL_SCAFFOLD_MD, SKILL_VISUALIZE_MD
         assert isinstance(SKILL_VISUALIZE_MD, str)
         assert isinstance(SKILL_BOARD_MD, str)
         assert isinstance(SKILL_SCAFFOLD_MD, str)
@@ -116,8 +114,10 @@ class TestAllConstantsAccessible:
 
     def test_draw_constants(self):
         from pactkit.prompts import (
-            DRAW_PROMPT_TEMPLATE, DRAW_REF_STYLES,
-            DRAW_REF_LAYOUTS, DRAW_REF_ANTI_BUGS,
+            DRAW_PROMPT_TEMPLATE,
+            DRAW_REF_ANTI_BUGS,
+            DRAW_REF_LAYOUTS,
+            DRAW_REF_STYLES,
         )
         assert isinstance(DRAW_PROMPT_TEMPLATE, str)
         assert isinstance(DRAW_REF_STYLES, str)
@@ -130,22 +130,26 @@ class TestAllConstantsAccessible:
 
     def test_review_refs(self):
         from pactkit.prompts import (
-            REVIEW_REF_SOLID, REVIEW_REF_SECURITY,
-            REVIEW_REF_QUALITY, REVIEW_REF_REMOVAL,
+            REVIEW_REF_QUALITY,
+            REVIEW_REF_REMOVAL,
+            REVIEW_REF_SECURITY,
+            REVIEW_REF_SOLID,
         )
         for ref in [REVIEW_REF_SOLID, REVIEW_REF_SECURITY,
                     REVIEW_REF_QUALITY, REVIEW_REF_REMOVAL]:
             assert isinstance(ref, str)
 
     def test_dev_refs(self):
-        from pactkit.prompts import DEV_REF_FRONTEND, DEV_REF_BACKEND
+        from pactkit.prompts import DEV_REF_BACKEND, DEV_REF_FRONTEND
         assert isinstance(DEV_REF_FRONTEND, str)
         assert isinstance(DEV_REF_BACKEND, str)
 
     def test_test_refs(self):
         from pactkit.prompts import (
-            TEST_REF_PYTHON, TEST_REF_NODE,
-            TEST_REF_GO, TEST_REF_JAVA,
+            TEST_REF_GO,
+            TEST_REF_JAVA,
+            TEST_REF_NODE,
+            TEST_REF_PYTHON,
         )
         for ref in [TEST_REF_PYTHON, TEST_REF_NODE,
                     TEST_REF_GO, TEST_REF_JAVA]:

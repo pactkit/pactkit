@@ -1,7 +1,4 @@
 """Tests for BUG-002/BUG-003: Board section placement, auto-move, and status naming."""
-import pytest
-import os
-from pathlib import Path
 
 
 BOARD_TEMPLATE = """# Sprint Board

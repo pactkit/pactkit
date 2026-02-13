@@ -1,8 +1,6 @@
 """STORY-032: Multi-Prefix Work Item Support (STORY/HOTFIX/BUG)."""
-import pytest
-import sys
-import re
 import os
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -104,7 +102,6 @@ class TestGitStartBranchMapping:
     def _get_branch_from_git_start(self, ns, item_id):
         """Call git_start with mocked subprocess and return the branch name."""
         with patch.dict(ns, {'subprocess': type(sys)('mock_sp')}):
-            import subprocess as sp
             branches = []
             def fake_run(cmd, **kw):
                 branches.append(cmd[-1])

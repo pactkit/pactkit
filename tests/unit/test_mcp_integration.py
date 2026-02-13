@@ -1,9 +1,9 @@
 """Tests for STORY-036 + STORY-037 + STORY-038: MCP-Aware PDCA Commands & Safe Regression."""
-import pytest
 
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p
@@ -237,7 +237,8 @@ class TestActTddLoopIsolated:
         p = _prompts()
         act = p.COMMANDS_CONTENT['project-act.md']
         act_lower = act.lower()
-        assert 'phase 2' in act_lower and ('only' in act_lower or 'loop' in act_lower)
+        assert 'phase 2' in act_lower
+        assert ('only' in act_lower or 'loop' in act_lower)
 
 
 # ---------------------------------------------------------------------------
@@ -265,7 +266,8 @@ class TestActRegressionReadOnly:
         p = _prompts()
         act = p.COMMANDS_CONTENT['project-act.md']
         act_lower = act.lower()
-        assert 'stop' in act_lower and ('report' in act_lower or 'user' in act_lower)
+        assert 'stop' in act_lower
+        assert ('report' in act_lower or 'user' in act_lower)
 
 
 # ---------------------------------------------------------------------------
@@ -311,7 +313,8 @@ class TestDoneDefaultFull:
         p = _prompts()
         done = p.COMMANDS_CONTENT['project-done.md']
         done_lower = done.lower()
-        assert 'all' in done_lower and 'incremental' in done_lower
+        assert 'all' in done_lower
+        assert 'incremental' in done_lower
 
     def test_done_no_hard_code_graph_dependency(self):
         """Decision tree must not fail when code_graph.mmd is missing."""
@@ -320,7 +323,8 @@ class TestDoneDefaultFull:
         done_lower = done.lower()
         # Must mention that missing graph → full regression
         assert ('missing' in done_lower or 'does not exist' in done_lower or
-                'not exist' in done_lower) and 'full' in done_lower
+                'not exist' in done_lower)
+        assert 'full' in done_lower
 
 
 # ---------------------------------------------------------------------------
@@ -339,4 +343,5 @@ class TestDoneCoverageCheck:
         """Done must mention 80% and 50% thresholds."""
         p = _prompts()
         done = p.COMMANDS_CONTENT['project-done.md']
-        assert '80%' in done and '50%' in done
+        assert '80%' in done
+        assert '50%' in done

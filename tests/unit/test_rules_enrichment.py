@@ -1,9 +1,9 @@
 """Tests for STORY-018: Enrich Rules Modules."""
-import pytest
 
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p
@@ -36,7 +36,8 @@ class TestCoreProtocolEnriched:
     def test_still_has_language_setting(self):
         p = _prompts()
         core = p.RULES_MODULES['core']
-        assert 'Language' in core and 'English' in core
+        assert 'Language' in core
+        assert 'English' in core
 
 
 class TestHierarchyOfTruthEnriched:

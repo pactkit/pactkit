@@ -1,5 +1,4 @@
 """Tests for STORY-011: Upgrade project-release to v20.0."""
-import pytest
 import sys
 from pathlib import Path
 

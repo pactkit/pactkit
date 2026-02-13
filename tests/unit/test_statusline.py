@@ -5,8 +5,8 @@ and verifying the output contains expected segments.
 """
 
 import json
-import subprocess
 import re
+import subprocess
 
 import pytest
 

@@ -1,8 +1,4 @@
-import pytest
-import os
 import sys
-import re
-import tempfile
 from pathlib import Path
 
 # 确保能 import devops
@@ -139,7 +135,8 @@ class TestPlaybookUpdates:
     def test_plan_mentions_rfc2119(self):
         import pactkit.prompts as p
         plan_md = p.COMMANDS_CONTENT['project-plan.md']
-        assert 'MUST' in plan_md and 'SHOULD' in plan_md
+        assert 'MUST' in plan_md
+        assert 'SHOULD' in plan_md
         assert 'Acceptance Criteria' in plan_md or 'Given/When/Then' in plan_md
 
     def test_check_has_spec_verification(self):

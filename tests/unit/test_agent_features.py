@@ -1,6 +1,5 @@
-import pytest
-import sys
 import re
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -12,7 +11,7 @@ if str(project_root) not in sys.path:
 def _parse_agent_frontmatter(text):
     """从 Agent .md 提取 YAML frontmatter"""
     match = re.match(r'^---\n(.*?)\n---', text.strip(), re.DOTALL)
-    assert match, f'Agent 缺少 YAML frontmatter'
+    assert match, 'Agent 缺少 YAML frontmatter'
     fm = {}
     for line in match.group(1).strip().splitlines():
         if ':' in line:

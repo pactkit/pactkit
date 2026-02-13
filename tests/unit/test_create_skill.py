@@ -1,8 +1,5 @@
-import pytest
 import sys
-import re
 from pathlib import Path
-from unittest.mock import patch
 
 # Add scaffold script to path (use source copy in project)
 SCAFFOLD_SCRIPT = Path(__file__).resolve().parent.parent.parent / 'src' / 'pactkit' / 'skills' / 'scaffold.py'

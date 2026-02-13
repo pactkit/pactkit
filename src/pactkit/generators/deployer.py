@@ -11,6 +11,7 @@ from pactkit import prompts
 from pactkit.skills import load_script
 from pactkit.utils import atomic_write
 
+
 def deploy(mode="expert"):
     print("🚀 PactKit DevOps Deployment (v20.0 - EXPERT Mode)")
 
@@ -142,7 +143,7 @@ def _deploy_expert(claude_root, agents_dir, commands_dir):
             "",
             cfg['prompt'],
             "",
-            f"Please refer to ~/.claude/CLAUDE.md for routing."
+            "Please refer to ~/.claude/CLAUDE.md for routing."
         ])
         atomic_write(agent_path, "\n".join(content))
     print(f"✅ Deployed {len(prompts.AGENTS_EXPERT)} Expert Agents")

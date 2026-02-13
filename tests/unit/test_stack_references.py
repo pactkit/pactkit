@@ -1,9 +1,9 @@
 """Tests for STORY-026: Stack-Aware Reference Profiles for Multi-Role Development."""
-import pytest
 
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p
@@ -210,7 +210,8 @@ class TestActPromptStackDetection:
         act = p.COMMANDS_CONTENT['project-act.md']
         # Should mention detecting project type
         lower = act.lower()
-        assert ('detect' in lower or 'identify' in lower) and ('stack' in lower or 'language' in lower or 'project type' in lower)
+        assert ('detect' in lower or 'identify' in lower)
+        assert ('stack' in lower or 'language' in lower or 'project type' in lower)
 
     def test_act_references_dev_ref(self):
         p = _prompts()

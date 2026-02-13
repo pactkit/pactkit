@@ -1,6 +1,5 @@
-import pytest
-import sys
 import re
+import sys
 from pathlib import Path
 from unittest.mock import patch
 
@@ -79,7 +78,8 @@ class TestSkillFrontmatter:
         content = (tmp_path / '.claude/skills/pactkit-visualize/SKILL.md').read_text()
         fm = self._parse_frontmatter(content)
         assert fm.get('name') == 'pactkit-visualize'
-        assert 'description' in fm and len(fm['description']) > 0
+        assert 'description' in fm
+        assert len(fm['description']) > 0
 
     def test_board_skill_frontmatter(self, tmp_path):
         with patch.object(Path, 'home', return_value=tmp_path):
@@ -89,7 +89,8 @@ class TestSkillFrontmatter:
         content = (tmp_path / '.claude/skills/pactkit-board/SKILL.md').read_text()
         fm = self._parse_frontmatter(content)
         assert fm.get('name') == 'pactkit-board'
-        assert 'description' in fm and len(fm['description']) > 0
+        assert 'description' in fm
+        assert len(fm['description']) > 0
 
     def test_scaffold_skill_frontmatter(self, tmp_path):
         with patch.object(Path, 'home', return_value=tmp_path):
@@ -99,7 +100,8 @@ class TestSkillFrontmatter:
         content = (tmp_path / '.claude/skills/pactkit-scaffold/SKILL.md').read_text()
         fm = self._parse_frontmatter(content)
         assert fm.get('name') == 'pactkit-scaffold'
-        assert 'description' in fm and len(fm['description']) > 0
+        assert 'description' in fm
+        assert len(fm['description']) > 0
 
 
 class TestSkillFunctionalParity:

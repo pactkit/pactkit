@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Standalone version for IDE support. Deployed with _SHARED_HEADER."""
-import re, os, sys, json, datetime, argparse, subprocess, shutil, ast
+import argparse
+import datetime
+import re
+import subprocess
 from pathlib import Path
 
 
@@ -48,7 +51,7 @@ def create_spec(i, t):
     if not p.parent.exists(): p.parent.mkdir(parents=True, exist_ok=True)
     c = nl().join([
         f'# Spec {i}: {t}',
-        f'- **Release**: TBD',
+        '- **Release**: TBD',
         '',
         '## Context',
         '> Background description',
@@ -81,7 +84,7 @@ _SKILL_NAME_RE = re.compile(r'^[a-z][a-z0-9]*(-[a-z0-9]+)*$')
 
 def create_skill(name, desc, base_dir=None):
     if not _SKILL_NAME_RE.match(name):
-        return f'❌ Invalid skill name: must match [a-z0-9-]+'
+        return '❌ Invalid skill name: must match [a-z0-9-]+'
     base = Path(base_dir) if base_dir else Path.home() / '.claude' / 'skills'
     root = base / name
     if root.exists():
@@ -107,7 +110,7 @@ def create_skill(name, desc, base_dir=None):
         '',
         '## Command Reference',
         '',
-        f'### [command_name] -- [Brief description]',
+        '### [command_name] -- [Brief description]',
         '```',
         f'python3 scripts/{clean}.py [subcommand] [args]',
         '```',
@@ -141,7 +144,7 @@ def create_prd(product_name):
     if not p.parent.exists(): p.parent.mkdir(parents=True, exist_ok=True)
     c = nl().join([
         f'# Product Requirements Document: {product_name}',
-        f'- **Version**: 1.0',
+        '- **Version**: 1.0',
         f'- **Date**: {datetime.date.today().isoformat()}',
         '',
         '---',

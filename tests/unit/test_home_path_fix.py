@@ -1,10 +1,10 @@
 """Tests for BUG-001: Playbook script paths use ~ (shell built-in) instead of $HOME (env var)."""
 import re
-import pytest
 
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p

@@ -1,8 +1,9 @@
 """Tests for STORY-013 R1: model field configurable per agent."""
-import pytest
 import sys
 from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent
 if str(project_root) not in sys.path:

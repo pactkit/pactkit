@@ -1,8 +1,9 @@
 """Tests for STORY-013 R2/R3: script extraction to real files."""
-import pytest
 import ast
 import sys
 from pathlib import Path
+
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent
 if str(project_root) not in sys.path:
@@ -41,13 +42,13 @@ class TestLoadScript:
         assert len(result) > 100
 
     def test_load_script_starts_with_shared_header(self):
-        from pactkit.skills import load_script, _SHARED_HEADER
+        from pactkit.skills import _SHARED_HEADER, load_script
         for name in SCRIPT_NAMES:
             result = load_script(name)
             assert result.startswith(_SHARED_HEADER), f'{name} missing shared header'
 
     def test_load_script_strips_standalone_header(self):
-        from pactkit.skills import load_script, _SHARED_HEADER
+        from pactkit.skills import _SHARED_HEADER, load_script
         for name in SCRIPT_NAMES:
             result = load_script(name)
             body = result[len(_SHARED_HEADER):]

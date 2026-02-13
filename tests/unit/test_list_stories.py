@@ -1,9 +1,6 @@
 """STORY-015: list_stories() unit tests — strict TDD."""
 import sys
-import re
 from pathlib import Path
-
-import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent
 if str(project_root) not in sys.path:

@@ -4,6 +4,7 @@ import pytest
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p
@@ -98,7 +99,8 @@ class TestPlaybookTraceability:
         """Hotfix now creates a lightweight Spec for traceability."""
         p = _prompts()
         text = p.HOTFIX_PROMPT.lower()
-        assert 'spec' in text and 'create' in text
+        assert 'spec' in text
+        assert 'create' in text
 
     def test_hotfix_adds_board_entry(self):
         """Hotfix now adds a Board entry for traceability."""

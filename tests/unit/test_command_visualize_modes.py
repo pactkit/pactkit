@@ -1,5 +1,4 @@
 """Tests for STORY-010: Commands must reference visualize multi-mode."""
-import pytest
 from pathlib import Path
 
 CLAUDE_DIR = Path.home() / '.claude'
@@ -39,7 +38,8 @@ class TestProjectPlan:
     def test_plan_has_mode_selection_guidance(self):
         content = (COMMANDS / 'project-plan.md').read_text()
         # Should mention at least two modes to guide selection
-        assert 'class' in content and 'call' in content
+        assert 'class' in content
+        assert 'call' in content
 
 
 # ==============================================================================

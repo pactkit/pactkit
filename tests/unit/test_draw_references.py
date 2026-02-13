@@ -1,10 +1,12 @@
 """Tests for STORY-024: Externalized Draw.io reference constants."""
 import re
+
 import pytest
 
 
 def _prompts():
     import importlib
+
     import pactkit.prompts as p
     importlib.reload(p)
     return p

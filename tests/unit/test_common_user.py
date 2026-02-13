@@ -4,7 +4,6 @@ Tests for pactkit init --mode common
 """
 import subprocess
 import sys
-import os
 from pathlib import Path
 
 import pytest
@@ -72,7 +71,7 @@ class TestScenario2_ZeroScriptReferences:
             for keyword in FORBIDDEN_KEYWORDS:
                 if keyword in content:
                     violations.append(f"{f.relative_to(deploy_dir)}: contains '{keyword}'")
-        assert violations == [], f"Forbidden keywords found:\n" + "\n".join(violations)
+        assert violations == [], "Forbidden keywords found:\n" + "\n".join(violations)
 
 
 class TestScenario3_InlinePDCA:

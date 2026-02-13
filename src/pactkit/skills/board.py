@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Standalone version for IDE support. Deployed with _SHARED_HEADER."""
-import re, os, sys, json, datetime, argparse, subprocess, shutil, ast
+import argparse
+import datetime
+import os
+import re
+import shutil
 from pathlib import Path
 
 
@@ -161,7 +165,7 @@ def update_task(sid, tasks_list):
 def update_version(version):
     yaml_path = Path.cwd() / '.claude' / 'pactkit.yaml'
     if not yaml_path.exists():
-        return f'⚠️ No pactkit.yaml found, skipping version update'
+        return '⚠️ No pactkit.yaml found, skipping version update'
     content = yaml_path.read_text(encoding='utf-8')
     content = re.sub(r'version:\s*\S+', f'version: {version}', content)
     yaml_path.write_text(content, encoding='utf-8')
@@ -215,7 +219,7 @@ def archive_stories():
     archive_dir = Path.cwd() / 'docs/product/archive'
     if not board_path.exists(): return '❌ No Board'
     content = board_path.read_text(encoding='utf-8')
-    parts = re.split(rf'(?=^### \[(?:STORY|HOTFIX|BUG)-)', content, flags=re.MULTILINE)
+    parts = re.split(r'(?=^### \[(?:STORY|HOTFIX|BUG)-)', content, flags=re.MULTILINE)
     active_parts = [parts[0]]
     archived_parts = []
     for part in parts[1:]:
