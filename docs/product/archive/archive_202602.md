@@ -30,3 +30,12 @@
 - [x] Add to VALID_COMMANDS and routing table
 - [x] Write unit tests for new command content
 - [x] Verify non-initialized project fallback
+
+### [STORY-008] Constitution Sharpening — 删除伪优势强化治理规则
+> Spec: docs/specs/STORY-008.md
+
+- [x] Remove pseudo-advantages from 01-core-protocol
+- [x] Add Session Context rule to core protocol
+- [x] Strengthen Hierarchy of Truth wording
+- [x] Update tests for changed rule content
+- [x] Verify token reduction >= 30%

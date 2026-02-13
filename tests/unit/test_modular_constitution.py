@@ -91,8 +91,8 @@ class TestContentCompleteness:
     def test_core_protocol_content(self):
         from pactkit.prompts import RULES_MODULES
         core = RULES_MODULES['core']
-        assert 'Language' in core or '语言' in core
-        assert 'thinking' in core.lower() or 'Think' in core
+        assert 'TDD' in core
+        assert 'Visual First' in core or 'visualize' in core
 
     def test_hierarchy_content(self):
         from pactkit.prompts import RULES_MODULES
@@ -120,36 +120,11 @@ class TestContentCompleteness:
         assert 'project-doctor' in routing
 
 
-class TestLanguageMirroring:
-    """STORY-031: Language directive mirrors user input language"""
-
-    def test_core_protocol_no_hardcoded_language(self):
-        """Scenario 1: Language line must NOT hardcode a single language as default"""
-        from pactkit.prompts import RULES_MODULES
-        core = RULES_MODULES['core']
-        lang_line = [l for l in core.splitlines() if '**Language**' in l][0].strip()
-        # Reject patterns like "**Language**: English." (just a bare language name)
-        hardcoded_patterns = [
-            '**: English.',
-            '**: Chinese.',
-            '**: Japanese.',
-            '**: Spanish.',
-            '**: French.',
-        ]
-        for pat in hardcoded_patterns:
-            assert not lang_line.endswith(pat), \
-                f'Language line hardcodes a single language: {lang_line}'
-
-    def test_core_protocol_contains_mirror_directive(self):
-        """Scenario 1: Language line MUST contain mirror/match directive"""
-        from pactkit.prompts import RULES_MODULES
-        core = RULES_MODULES['core']
-        lang_line = [l for l in core.splitlines() if '**Language**' in l][0].lower()
-        assert 'mirror' in lang_line or 'match' in lang_line or 'follow' in lang_line, \
-            f'Language line missing mirror directive: {lang_line}'
+class TestDeployedCoreMatchesSource:
+    """STORY-008: Deployed core protocol matches source"""
 
     def test_deployed_file_matches_source(self, tmp_path):
-        """Scenario 2: Deployed 01-core-protocol.md matches RULES_MODULES source"""
+        """Deployed 01-core-protocol.md matches RULES_MODULES source"""
         from pactkit.prompts import RULES_MODULES
         _deploy(tmp_path)
         deployed = (tmp_path / '.claude' / 'rules' / '01-core-protocol.md').read_text()

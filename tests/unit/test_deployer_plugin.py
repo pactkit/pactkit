@@ -143,7 +143,7 @@ class TestPluginClaudeMd:
         out = _run_deploy_plugin(tmp_path)
         content = (out / "CLAUDE.md").read_text()
         assert "# Core Protocol" in content
-        assert "PRIME DIRECTIVE" in content
+        assert "Strict TDD" in content
 
     def test_contains_hierarchy_of_truth(self, tmp_path):
         out = _run_deploy_plugin(tmp_path)

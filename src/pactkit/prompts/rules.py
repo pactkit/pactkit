@@ -1,17 +1,9 @@
 RULES_MODULES = {
     'core': """# Core Protocol
-> **PRIME DIRECTIVE**: "Think Hard" Mode is **ALWAYS ON**.
-- **Language**: Mirror the user's input language (e.g., user writes Chinese → respond in Chinese; user writes English → respond in English).
-- **Mode**: **Enterprise Expert**.
-- **Cognitive Rule**: Output a `<thinking>` block BEFORE using any tools.
 
-## Atomic Tools
-Prefer dedicated tools over Bash substitutes:
-- Use `Read` for reading files, not `cat` / `head` / `tail`
-- Use `Edit` for editing files, not `sed` / `awk`
-- Use `Write` for creating files, not `echo >` / `cat <<EOF`
-- Use `Grep` for searching content, not `grep` / `rg`
-- Use `Glob` for finding files, not `find` / `ls`
+## Session Context
+On new session, read `docs/product/context.md` to understand project state before taking action.
+If the file is missing, suggest `/project-init` to bootstrap the project.
 
 ## Visual First
 Understand the current state before modifying code:
@@ -21,13 +13,8 @@ Understand the current state before modifying code:
 
 ## Strict TDD
 - Write tests first (RED), then write implementation (GREEN)
-- Exception: `/project-hotfix` is allowed to skip TDD
-- All tests in the project's test suite must pass before committing (see `LANG_PROFILES` for the test runner)
-
-## Output Conventions
-- Lead with conclusions: present the conclusion first, then expand with analysis
-- Use tables for comparisons, bullets for lists, numbered steps for procedures
-- Structured reporting: Summary → Details → Next Steps
+- The agent MUST NOT skip TDD except when running `/project-hotfix`
+- All tests must pass before committing
 """,
     'hierarchy': """# The Hierarchy of Truth
 > **CRITICAL**: Code is NOT the law.
@@ -39,6 +26,11 @@ Understand the current state before modifying code:
 - When Spec conflicts with code: **Spec takes precedence**, modify the code
 - When Spec conflicts with tests: **Spec takes precedence**, modify the tests
 - When the Spec itself is found to be incorrect: fix the Spec first, then sync code and tests
+
+## Pre-existing Test Protocol
+- If a pre-existing test fails during regression, **do not modify** the failing test or the code it tests
+- STOP and report: which test failed, what it tests, which change caused it
+- You MUST NOT assume you understand the design intent behind pre-existing tests
 
 ## Operating Guidelines
 - Before modifying code, you must first read the relevant Spec (`docs/specs/`)

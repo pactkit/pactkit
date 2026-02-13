@@ -12,12 +12,6 @@ def _prompts():
 class TestCoreProtocolEnriched:
     """Scenario 1: Core Protocol 有可执行定义"""
 
-    def test_has_atomic_tools_definition(self):
-        p = _prompts()
-        core = p.RULES_MODULES['core']
-        # Must explain what Atomic Tools means, not just mention the label
-        assert 'Read' in core or 'Edit' in core or 'Write' in core
-
     def test_has_visual_first_definition(self):
         p = _prompts()
         core = p.RULES_MODULES['core']
@@ -28,16 +22,11 @@ class TestCoreProtocolEnriched:
         core = p.RULES_MODULES['core']
         assert 'test' in core.lower() or 'TDD' in core
 
-    def test_still_has_thinking_rule(self):
+    def test_has_session_context(self):
+        """STORY-008: Core protocol now has Session Context instead of pseudo-advantages."""
         p = _prompts()
         core = p.RULES_MODULES['core']
-        assert 'thinking' in core.lower()
-
-    def test_still_has_language_setting(self):
-        p = _prompts()
-        core = p.RULES_MODULES['core']
-        assert 'Language' in core
-        assert 'English' in core
+        assert 'Session Context' in core or 'context.md' in core
 
 
 class TestHierarchyOfTruthEnriched:
