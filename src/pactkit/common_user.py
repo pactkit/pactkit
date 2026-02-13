@@ -7,10 +7,10 @@ Usage:
     pactkit init --mode common              # Install to ~/.claude/
     pactkit init --mode common -t /tmp/out  # Preview to custom dir
 """
-import sys
 import argparse
-from pathlib import Path
 import textwrap
+from pathlib import Path
+
 
 # --- Configuration ---
 class Colors:

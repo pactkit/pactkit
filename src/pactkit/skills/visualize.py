@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Standalone version for IDE support. Deployed with _SHARED_HEADER."""
-import re, os, sys, json, datetime, argparse, subprocess, shutil, ast
+import argparse
+import ast
+import os
 from pathlib import Path
 
 
@@ -105,7 +107,6 @@ def _build_file_graph(root, all_files, module_index, file_to_node, focus):
 # --- MODE: CLASS (classDiagram) ---
 def _build_class_graph(root, all_files, focus):
     classes = []  # (file, class_name, bases, methods)
-    standalone_funcs = []  # (file, func_name)
 
     for p in all_files:
         try:

@@ -57,3 +57,16 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/pactkit/prompts/__init__.py" = ["F401"]
+"src/pactkit/prompts/agents.py" = ["E501"]
+"src/pactkit/prompts/commands.py" = ["E501"]
+"src/pactkit/prompts/references.py" = ["E501"]
+"src/pactkit/prompts/rules.py" = ["E501"]
+"src/pactkit/prompts/skills.py" = ["E501"]
+"src/pactkit/prompts/workflows.py" = ["E501"]
+"src/pactkit/generators/deployer.py" = ["E402"]
+"src/pactkit/skills/*.py" = ["E501", "E701", "E702", "E722", "E731"]
+"src/pactkit/scripts.py" = ["E501"]
+"tests/**/*.py" = ["E402", "E501", "E741", "F841"]

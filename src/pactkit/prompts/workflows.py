@@ -43,7 +43,7 @@ sequenceDiagram
     participant Entry as API/CLI
     participant Logic as DomainLogic
     participant Data as Persistence
-    
+
     Entry->>Logic: Trigger Action
     Logic->>Data: Query
     Data-->>Logic: Result
