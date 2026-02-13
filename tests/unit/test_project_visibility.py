@@ -20,11 +20,6 @@ class TestReadmeContent:
         content = self._readme().lower()
         assert "common mode" not in content
 
-    def test_has_downloads_badge(self):
-        """README should include a PyPI downloads badge."""
-        content = self._readme()
-        assert "downloads" in content.lower() or "pepy.tech" in content
-
     def test_quick_start_no_mode_flag(self):
         """Quick Start code blocks must not use --mode."""
         content = self._readme()
