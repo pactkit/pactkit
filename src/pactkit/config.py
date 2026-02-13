@@ -1,6 +1,7 @@
 """PactKit configuration — load, validate, and generate pactkit.yaml."""
 import warnings
 from pathlib import Path
+from typing import Union
 
 import yaml
 
@@ -107,6 +108,110 @@ def load_config(path: Path | str | None = None) -> dict:
             merged[key] = value
 
     return merged
+
+
+# ---------------------------------------------------------------------------
+# Auto-merge new components
+# ---------------------------------------------------------------------------
+
+def auto_merge_config_file(path: Union[Path, str]) -> list[str]:
+    """Auto-merge new components into an existing pactkit.yaml.
+
+    For each list-type key (agents, commands, skills, rules), appends items
+    from the VALID_* registry that are missing from the user's list and not
+    present in the ``exclude`` section.
+
+    Modifies the YAML file in-place.  Returns a list of ``"key: item"``
+    strings describing what was added (empty list when nothing changed).
+    """
+    path = Path(path)
+    if not path.exists():
+        return []
+
+    raw = path.read_text(encoding='utf-8')
+    user_data = yaml.safe_load(raw)
+
+    if not isinstance(user_data, dict):
+        return []
+
+    exclude = user_data.get('exclude', {})
+    if not isinstance(exclude, dict):
+        exclude = {}
+
+    added: list[str] = []
+
+    for key, valid_set in _REGISTRY.items():
+        user_list = user_data.get(key)
+        if user_list is None:
+            # Key not in user yaml → will inherit defaults via load_config
+            continue
+        if not isinstance(user_list, list):
+            continue
+
+        excluded_items = set(exclude.get(key, []) or [])
+        user_set = set(user_list)
+        new_items = sorted(
+            item for item in valid_set
+            if item not in user_set and item not in excluded_items
+        )
+
+        if new_items:
+            user_data[key] = user_list + new_items
+            for item in new_items:
+                added.append(f"{key}: {item}")
+
+    if added:
+        _rewrite_yaml(path, user_data)
+
+    return added
+
+
+def _rewrite_yaml(path: Path, data: dict) -> None:
+    """Rewrite pactkit.yaml preserving the standard section layout."""
+    lines = [
+        '# PactKit Configuration',
+        '# Edit this file to customize which components are deployed.',
+        '# Remove items from a list to disable them. Default: all enabled.',
+        '',
+        f'version: "{data.get("version", "0.0.1")}"',
+        f'stack: {data.get("stack", "auto")}',
+        f'root: {data.get("root", ".")}',
+        '',
+    ]
+
+    section_comments = {
+        'agents': '# Agents — AI role definitions deployed to ~/.claude/agents/',
+        'commands': '# Commands — PDCA playbooks deployed to ~/.claude/commands/',
+        'skills': '# Skills — tool scripts deployed to ~/.claude/skills/',
+        'rules': '# Rules — constitution modules deployed to ~/.claude/rules/',
+    }
+
+    for key in ('agents', 'commands', 'skills', 'rules'):
+        items = data.get(key)
+        if items is None:
+            continue
+        comment = section_comments.get(key, '')
+        if comment:
+            lines.append(comment)
+        lines.append(f'{key}:')
+        for item in items:
+            lines.append(f'  - {item}')
+        lines.append('')
+
+    # Write exclude section if present
+    exclude = data.get('exclude', {})
+    if exclude and isinstance(exclude, dict):
+        lines.append('# Exclude — components that should NOT be auto-added on upgrade')
+        lines.append('exclude:')
+        for key in ('agents', 'commands', 'skills', 'rules'):
+            items = exclude.get(key)
+            if items:
+                lines.append(f'  {key}:')
+                for item in items:
+                    lines.append(f'    - {item}')
+        lines.append('')
+
+    path.write_text('\n'.join(lines), encoding='utf-8')
 
 
 # ---------------------------------------------------------------------------

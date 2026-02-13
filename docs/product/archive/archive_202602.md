@@ -39,3 +39,13 @@
 - [x] Strengthen Hierarchy of Truth wording
 - [x] Update tests for changed rule content
 - [x] Verify token reduction >= 30%
+
+### [STORY-009] Config Auto-Merge — pactkit init 自动合并新组件
+> Spec: docs/specs/STORY-009.md
+
+- [x] Modify load_config() merge logic
+- [x] Add auto-append for new components
+- [x] Handle user opt-out (exclude)
+- [x] Add version tracking to yaml
+- [x] Update tests
+- [x] Backward compatibility verification

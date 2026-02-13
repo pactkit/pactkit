@@ -14,6 +14,7 @@ from pactkit.config import (
     VALID_COMMANDS,
     VALID_RULES,
     VALID_SKILLS,
+    auto_merge_config_file,
     generate_default_yaml,
     load_config,
     validate_config,
@@ -59,6 +60,10 @@ def _deploy_classic(config=None, target=None):
     # Load config if not provided
     if config is None:
         yaml_path = claude_root / "pactkit.yaml"
+        # Auto-merge new components before loading (STORY-009)
+        auto_added = auto_merge_config_file(yaml_path)
+        for item in auto_added:
+            print(f"  -> Auto-added: {item}")
         config = load_config(yaml_path)
 
     validate_config(config)
