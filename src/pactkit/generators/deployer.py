@@ -15,7 +15,6 @@ from pactkit.config import (
     VALID_RULES,
     VALID_SKILLS,
     generate_default_yaml,
-    get_default_config,
     load_config,
     validate_config,
 )
@@ -226,7 +225,7 @@ def _deploy_rules(claude_root, enabled_rules):
     rules_dir = claude_root / "rules"
     rules_dir.mkdir(parents=True, exist_ok=True)
 
-    enabled_set = set(enabled_rules)
+    set(enabled_rules)
 
     # Build reverse map: rule identifier -> (key, filename)
     # e.g. '01-core-protocol' -> ('core', '01-core-protocol.md')

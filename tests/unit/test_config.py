@@ -4,9 +4,7 @@ STORY-001: Config Schema — pactkit.yaml load, validate, defaults.
 import warnings
 from pathlib import Path
 
-import pytest
 import yaml
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -234,10 +232,11 @@ class TestCommonModeRemoved:
         assert not (test_dir / 'test_common_user.py').exists()
 
     def test_cli_no_mode_flag(self):
-        from pactkit.cli import main
-        import argparse
+
         # Verify --mode is not in the CLI by checking the source
         import inspect
+
+        from pactkit.cli import main
         source = inspect.getsource(main)
         assert '--mode' not in source
         assert 'common_user' not in source
@@ -250,14 +249,16 @@ class TestCommonModeRemoved:
 class TestCLINoMode:
     def test_cli_has_no_mode_argument(self):
         """CLI init subparser should not accept --mode."""
-        import pactkit.cli as cli_mod
         import inspect
+
+        import pactkit.cli as cli_mod
         source = inspect.getsource(cli_mod)
         assert 'choices=["expert", "common"]' not in source
 
     def test_cli_no_import_common_user(self):
-        import pactkit.cli as cli_mod
         import inspect
+
+        import pactkit.cli as cli_mod
         source = inspect.getsource(cli_mod)
         assert 'common_user' not in source
 

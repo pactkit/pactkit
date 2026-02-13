@@ -7,16 +7,13 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from pactkit.generators.deployer import deploy
 from pactkit.prompts import AGENTS_EXPERT, COMMANDS_CONTENT
-from pactkit.prompts.rules import RULES_MODULES, RULES_FILES
-
+from pactkit.prompts.rules import RULES_FILES, RULES_MODULES
 
 # ---------------------------------------------------------------------------
 # Helpers

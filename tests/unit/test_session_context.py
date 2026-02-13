@@ -76,9 +76,9 @@ class TestClaudeMdContextReference:
 
     def test_deployer_classic_includes_context(self):
         """_deploy_claude_md should produce CLAUDE.md with context reference."""
-        from pathlib import Path
-        from unittest.mock import patch
         import tempfile
+        from pathlib import Path
+
         from pactkit.generators.deployer import _deploy_claude_md
         from pactkit.prompts import RULES_FILES
 
@@ -208,8 +208,9 @@ class TestPluginModeContext:
 
     def test_plugin_inline_has_init_tip(self):
         """Plugin CLAUDE.md should hint at /project-init for context."""
-        from pathlib import Path
         import tempfile
+        from pathlib import Path
+
         from pactkit.generators.deployer import _deploy_claude_md_inline
 
         with tempfile.TemporaryDirectory() as tmp:

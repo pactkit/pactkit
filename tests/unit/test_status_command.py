@@ -3,8 +3,6 @@ STORY-007: /project-status — 冷启动项目状态感知命令
 """
 import importlib
 
-import pytest
-
 
 def _prompts():
     import pactkit.prompts as p

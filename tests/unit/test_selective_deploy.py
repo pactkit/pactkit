@@ -1,16 +1,12 @@
 """
 STORY-002: Selective Deployment — Deployer filters by pactkit.yaml config.
 """
-import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
-from pactkit.config import get_default_config, generate_default_yaml
+from pactkit.config import get_default_config
 from pactkit.generators.deployer import deploy
 from pactkit.prompts import AGENTS_EXPERT, COMMANDS_CONTENT, RULES_FILES
-
 
 # ---------------------------------------------------------------------------
 # Helpers
