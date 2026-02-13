@@ -49,3 +49,13 @@
 - [x] Add version tracking to yaml
 - [x] Update tests
 - [x] Backward compatibility verification
+
+### [STORY-010] Release v1.1.0 — 文档同步 + 版本发布
+> Spec: docs/specs/STORY-010.md
+
+- [x] Sync README.md (13→14 commands, add project-status)
+- [x] Sync .claude/CLAUDE.md (stale numbers)
+- [x] Bump version to 1.1.0 (pyproject + __init__)
+- [x] Create CHANGELOG.md
+- [x] Run tests + build verification
+- [x] Git tag v1.1.0

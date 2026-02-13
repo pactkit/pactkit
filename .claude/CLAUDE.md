@@ -12,7 +12,7 @@ PactKit is a spec-driven agentic DevOps toolkit for AI coding assistants. It com
 
 ## Project Status
 
-846 tests passing. Published on PyPI and GitHub.
+909+ tests passing. Published on PyPI and GitHub.
 
 ### Distribution Modes
 
@@ -40,7 +40,7 @@ src/pactkit/
 │   └── deployer.py     ← Core deployment orchestrator (classic/plugin/marketplace)
 ├── prompts/            ← All prompt templates and constants
 │   ├── agents.py       ← 9 agent definitions
-│   ├── commands.py     ← 13 command playbooks
+│   ├── commands.py     ← 14 command playbooks
 │   ├── references.py   ← Reference checklists (SOLID/Security/Quality)
 │   ├── rules.py        ← 6 constitution rule modules + CLAUDE_MD_TEMPLATE
 │   ├── skills.py       ← 3 skill definitions

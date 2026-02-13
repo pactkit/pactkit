@@ -8,7 +8,7 @@
 
 **Ship features with AI agents that follow specs, not vibes.**
 
-> PactKit gives Claude Code a structured operating system — 9 specialized agents, 13 commands, and a full Plan-Act-Check-Done lifecycle. One `pip install` and your AI assistant writes specs before code, runs TDD, and never commits without passing tests.
+> PactKit gives Claude Code a structured operating system — 9 specialized agents, 14 commands, and a full Plan-Act-Check-Done lifecycle. One `pip install` and your AI assistant writes specs before code, runs TDD, and never commits without passing tests.
 
 ### What it looks like
 
@@ -41,7 +41,7 @@ Requires Python 3.10+ and [Claude Code](https://docs.anthropic.com/en/docs/claud
 ## Quick Start
 
 ```bash
-# Deploy full toolkit (13 commands + 9 agents + 3 skills)
+# Deploy full toolkit (14 commands + 9 agents + 3 skills)
 pactkit init
 
 # Update to latest playbooks (preserves your config)
@@ -83,6 +83,7 @@ Or run the full cycle in one command:
 | **Done** | `/project-done` | Repo Maintainer | Safe regression gate → Archive → Conventional commit |
 | **Trace** | `/project-trace` | Code Explorer | Call graph tracing → Sequence diagram |
 | **Draw** | `/project-draw` | Visual Architect | Generate Draw.io XML architecture diagrams |
+| **Status** | `/project-status` | System Medic | Cold-start project overview → Sprint + Git + Health report |
 | **Doctor** | `/project-doctor` | System Medic | Configuration drift detection → Health report |
 | **Review** | `/project-review` | QA Engineer | PR review with SOLID/Security/Quality checklists |
 | **Sprint** | `/project-sprint` | Team Lead | One-command automated PDCA orchestration |
@@ -140,7 +141,7 @@ PactKit deploys to `~/.claude/`:
 ~/.claude/
 ├── CLAUDE.md                 ← Modular constitution (entry point)
 ├── rules/                    ← 6 rule modules
-├── commands/                 ← 13 command playbooks
+├── commands/                 ← 14 command playbooks
 ├── agents/                   ← 9 agent definitions
 └── skills/                   ← 3 skill packages
     ├── pactkit-visualize/
