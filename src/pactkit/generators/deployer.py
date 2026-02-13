@@ -25,6 +25,21 @@ from pactkit.utils import atomic_write
 # Valid output formats
 VALID_FORMATS = ('classic', 'plugin', 'marketplace')
 
+# Path prefix constants for deploy-time rewriting (BUG-002)
+CLASSIC_SKILLS_PREFIX = "~/.claude/skills"
+PLUGIN_SKILLS_PREFIX = "${CLAUDE_PLUGIN_ROOT}/skills"
+
+
+def _rewrite_skills_prefix(content, skills_prefix):
+    """Rewrite ~/.claude/skills references to the target skills_prefix.
+
+    No-op when skills_prefix is the classic default. For plugin mode,
+    replaces all occurrences of ~/.claude/skills with ${CLAUDE_PLUGIN_ROOT}/skills.
+    """
+    if skills_prefix == CLASSIC_SKILLS_PREFIX:
+        return content
+    return content.replace(CLASSIC_SKILLS_PREFIX, skills_prefix)
+
 
 def deploy(config=None, target=None, format="classic", **_kwargs):
     """Deploy PactKit configuration.
@@ -126,11 +141,12 @@ def _deploy_plugin(target=None):
     all_commands = sorted(VALID_COMMANDS)
     all_skills = sorted(VALID_SKILLS)
 
-    # Deploy components
-    n_skills = _deploy_skills(skills_dir, all_skills)
-    _deploy_claude_md_inline(plugin_root)
-    n_agents = _deploy_agents(agents_dir, all_agents)
-    n_commands = _deploy_commands(commands_dir, all_commands)
+    # Deploy components (BUG-002: rewrite paths for plugin mode)
+    prefix = PLUGIN_SKILLS_PREFIX
+    n_skills = _deploy_skills(skills_dir, all_skills, skills_prefix=prefix)
+    _deploy_claude_md_inline(plugin_root, skills_prefix=prefix)
+    n_agents = _deploy_agents(agents_dir, all_agents, skills_prefix=prefix)
+    n_commands = _deploy_commands(commands_dir, all_commands, skills_prefix=prefix)
     _deploy_plugin_json(plugin_meta_dir)
 
     print(f"\n✅ Plugin: {n_agents} Agents, {n_commands} Commands, "
@@ -154,8 +170,13 @@ def _deploy_marketplace(target=None):
     print(f"\n✅ Marketplace → {marketplace_root}")
 
 
-def _deploy_skills(skills_dir, enabled_skills):
-    """Deploy skill directories filtered by config."""
+def _deploy_skills(skills_dir, enabled_skills, skills_prefix=CLASSIC_SKILLS_PREFIX):
+    """Deploy skill directories filtered by config.
+
+    Args:
+        skills_prefix: Path prefix for skill script references.
+            Classic: ~/.claude/skills (default). Plugin: ${CLAUDE_PLUGIN_ROOT}/skills.
+    """
     # Skills with executable scripts
     scripted_skill_defs = [
         {
@@ -199,7 +220,8 @@ def _deploy_skills(skills_dir, enabled_skills):
         scripts_dir = skill_dir / 'scripts'
         scripts_dir.mkdir(parents=True, exist_ok=True)
 
-        atomic_write(skill_dir / 'SKILL.md', sd['skill_md'])
+        skill_md = _rewrite_skills_prefix(sd['skill_md'], skills_prefix)
+        atomic_write(skill_dir / 'SKILL.md', skill_md)
         atomic_write(scripts_dir / sd['script_name'], sd['script_source'])
         deployed += 1
 
@@ -210,7 +232,8 @@ def _deploy_skills(skills_dir, enabled_skills):
         skill_dir = skills_dir / sd['name']
         skill_dir.mkdir(parents=True, exist_ok=True)
 
-        atomic_write(skill_dir / 'SKILL.md', sd['skill_md'])
+        skill_md = _rewrite_skills_prefix(sd['skill_md'], skills_prefix)
+        atomic_write(skill_dir / 'SKILL.md', skill_md)
         deployed += 1
 
     return deployed
@@ -300,8 +323,13 @@ def _deploy_claude_md(claude_root, enabled_rules):
     atomic_write(claude_root / "CLAUDE.md", "\n".join(lines))
 
 
-def _deploy_agents(agents_dir, enabled_agents):
-    """Deploy agent definitions filtered by config."""
+def _deploy_agents(agents_dir, enabled_agents, skills_prefix=CLASSIC_SKILLS_PREFIX):
+    """Deploy agent definitions filtered by config.
+
+    Args:
+        skills_prefix: Path prefix for skill script references.
+            Classic: ~/.claude/skills (default). Plugin: ${CLAUDE_PLUGIN_ROOT}/skills.
+    """
     enabled_set = set(enabled_agents)
 
     # Clean up managed agent files not in enabled set
@@ -335,14 +363,20 @@ def _deploy_agents(agents_dir, enabled_agents):
             "",
             "Please refer to ~/.claude/CLAUDE.md for routing."
         ])
-        atomic_write(agent_path, "\n".join(content))
+        rewritten = _rewrite_skills_prefix("\n".join(content), skills_prefix)
+        atomic_write(agent_path, rewritten)
         deployed += 1
 
     return deployed
 
 
-def _deploy_commands(commands_dir, enabled_commands):
-    """Deploy command playbooks filtered by config."""
+def _deploy_commands(commands_dir, enabled_commands, skills_prefix=CLASSIC_SKILLS_PREFIX):
+    """Deploy command playbooks filtered by config.
+
+    Args:
+        skills_prefix: Path prefix for skill script references.
+            Classic: ~/.claude/skills (default). Plugin: ${CLAUDE_PLUGIN_ROOT}/skills.
+    """
     enabled_set = set(enabled_commands)
 
     # Build map: command name -> filename
@@ -361,7 +395,8 @@ def _deploy_commands(commands_dir, enabled_commands):
         cmd_name = filename.removesuffix('.md')
         if cmd_name not in enabled_set:
             continue
-        atomic_write(commands_dir / filename, content)
+        rewritten = _rewrite_skills_prefix(content, skills_prefix)
+        atomic_write(commands_dir / filename, rewritten)
         deployed += 1
 
     return deployed
@@ -401,7 +436,7 @@ def _deploy_plugin_json(plugin_meta_dir):
     atomic_write(plugin_meta_dir / "plugin.json", content)
 
 
-def _deploy_claude_md_inline(plugin_root):
+def _deploy_claude_md_inline(plugin_root, skills_prefix=CLASSIC_SKILLS_PREFIX):
     """Generate CLAUDE.md with all rules inlined (no @import references)."""
     # Build reverse map: rule_id -> key for ordered iteration
     rule_id_to_key = {}
@@ -423,7 +458,8 @@ def _deploy_claude_md_inline(plugin_root):
                  " and enable cross-session context.")
     lines.append("")
 
-    atomic_write(plugin_root / "CLAUDE.md", "\n".join(lines))
+    rewritten = _rewrite_skills_prefix("\n".join(lines), skills_prefix)
+    atomic_write(plugin_root / "CLAUDE.md", rewritten)
 
 
 def _deploy_marketplace_json(marketplace_root):
