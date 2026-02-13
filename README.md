@@ -165,6 +165,7 @@ PactKit conditionally integrates with MCP servers when available:
 | Playwright | Browser automation testing | Check |
 | Chrome DevTools | Performance/console/network | Check |
 | Memory | Cross-session knowledge graph | Plan/Act/Done |
+| Draw.io | Architecture diagram instant preview | Plan, Design |
 
 All MCP instructions are conditional — gracefully skipped when unavailable.
 
