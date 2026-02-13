@@ -147,6 +147,11 @@ Format: `type(scope): description`
 - **Role**: Product Designer
 - **Playbook**: `commands/project-design.md`
 - **Goal**: Greenfield product design: PRD generation, story decomposition, board setup.
+
+### Status (`/project-status`)
+- **Role**: System Medic
+- **Playbook**: `commands/project-status.md`
+- **Goal**: Project state overview for cold-start orientation.
 """,
 
     'mcp': """# MCP Integration (Conditional)

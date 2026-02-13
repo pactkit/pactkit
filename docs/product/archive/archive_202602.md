@@ -22,3 +22,11 @@
 - [x] Add lessons.md auto-append to Done playbook
 - [x] Write unit tests for prompt changes
 - [x] Verify plugin mode inline CLAUDE.md unaffected
+
+### [STORY-007] /project-status 冷启动项目状态感知命令
+> Spec: docs/specs/STORY-007.md
+
+- [x] Add project-status.md playbook to commands.py
+- [x] Add to VALID_COMMANDS and routing table
+- [x] Write unit tests for new command content
+- [x] Verify non-initialized project fallback

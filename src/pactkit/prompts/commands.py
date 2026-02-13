@@ -520,6 +520,69 @@ allowed-tools: [Read, Write, Edit, Bash, Glob]
 # ==============================================================================
 
 # Register additional prompts into COMMANDS_CONTENT
+COMMANDS_CONTENT["project-status.md"] = """---
+description: "Project state overview for cold-start orientation"
+allowed-tools: [Read, Bash, Glob, Grep]
+---
+
+# Command: Status (v1.0)
+- **Usage**: `/project-status`
+- **Agent**: System Medic
+
+> **PRINCIPLE**: This is a **read-only** command. It does not modify any files or create artifacts.
+
+## 🧠 Phase 0: The Thinking Process (Mandatory)
+> **INSTRUCTION**: Output a `<thinking>` block.
+1.  **Context**: Is this project initialized (has `docs/product/sprint_board.md`)?
+2.  **Scope**: What information can be gathered (board, git, tests)?
+
+## 🎬 Phase 1: Gather Data
+1.  **Check Init Status**: Does `docs/product/sprint_board.md` exist?
+    - If **YES**: Read it and extract story counts by section (Backlog / In Progress / Done).
+    - If **NO**: Note "Project not initialized" and skip to Phase 2 (Git State only).
+2.  **Specs Coverage**: Count files in `docs/specs/*.md` and compare to total stories on the board.
+3.  **Architecture Graphs**: Check if `docs/architecture/graphs/code_graph.mmd` exists and its last-modified date.
+
+## 🎬 Phase 2: Git State
+1.  **Branch**: Run `git branch --show-current`.
+2.  **Uncommitted Changes**: Run `git status --short` and summarize.
+3.  **Active Feature Branches**: Run `git branch --list 'feature/*' 'fix/*'`.
+
+## 🎬 Phase 3: Output Report
+Output the following structured report directly to the terminal:
+
+```
+## Project Status Report
+
+### Sprint Board
+- 📋 Backlog: {N} stories
+- 🔄 In Progress: {N} stories {list IDs + titles if any}
+- ✅ Done: {N} stories
+
+### Git State
+- Branch: {current branch}
+- Uncommitted changes: {Y/N, summary}
+- Active feature branches: {list or "None"}
+
+### Health Indicators
+- Architecture graphs: {fresh/stale/missing}
+- Specs coverage: {N stories with specs / N total}
+
+### Recommended Next Action
+{Decision tree:
+  - If In Progress stories exist → `/project-act STORY-XXX`
+  - If only Backlog stories → `/project-plan` to pick one
+  - If board is empty or all Done → `/project-design` or `/project-plan` for next iteration
+  - If project not initialized → `/project-init`}
+```
+
+## 🎬 Phase 4: Context Refresh (Conditional)
+> Only if the project is initialized (sprint_board.md exists).
+1.  **Check**: Does `docs/product/context.md` exist?
+2.  **Refresh**: If the project is initialized, suggest running `/project-done` or the next PDCA command to refresh `context.md`.
+    - This command does not write files — the refresh happens via downstream commands.
+"""
+
 COMMANDS_CONTENT["project-sprint.md"] = SPRINT_PROMPT
 COMMANDS_CONTENT["project-review.md"] = REVIEW_PROMPT
 COMMANDS_CONTENT["project-hotfix.md"] = HOTFIX_PROMPT

@@ -34,6 +34,7 @@ VALID_COMMANDS = frozenset({
     'project-hotfix',
     'project-design',
     'project-release',
+    'project-status',
 })
 
 VALID_SKILLS = frozenset({

@@ -6,3 +6,4 @@
 | 2025-02 | Selective deployment needs cleanup of stale files when config changes | STORY-002 |
 | 2025-02 | `pactkit.yaml` must be generated on first `init` with sensible defaults | STORY-001 |
 | 2025-02 | Cross-session value comes from persistent artifacts (context.md, lessons.md), not from more rules — prompt changes are the cheapest high-impact mechanism | STORY-006 |
+| 2025-02 | Adding a new command touches 3 files (config.py, commands.py, rules.py) plus count assertions in existing tests — keep count tests data-driven to reduce churn | STORY-007 |
