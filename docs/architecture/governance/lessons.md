@@ -10,3 +10,4 @@
 | 2025-02 | Removing rules that overlap with LLM native behavior (55% token reduction) improves signal-to-noise — fewer rules = higher compliance on the ones that matter | STORY-008 |
 | 2025-02 | Auto-merge new components via separate function (not load_config) preserves existing contract — exclude section in yaml handles user opt-out without version diffing | STORY-009 |
 | 2025-02 | Release prep is a good time to catch stale numbers in docs — embed counts as tests to prevent future drift | STORY-010 |
+| 2026-02 | Demoting commands to skills is a prompt-only refactor (no Python scripts needed for prompt-only skills) — but updating 25+ test files with hardcoded counts is the real cost; prefer data-driven assertions | STORY-011 |

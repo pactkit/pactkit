@@ -31,35 +31,39 @@ class TestReviewPromptExists:
         assert '$ARGUMENTS' in p.REVIEW_PROMPT
 
 
-class TestReviewInCommandsContent:
-    """Scenario 2: 已注册到 COMMANDS_CONTENT"""
+class TestReviewIsSkill:
+    """Scenario 2: Review is now a skill (STORY-011), not a command."""
 
-    def test_registered(self):
+    def test_not_in_commands_content(self):
+        """project-review.md should no longer be in COMMANDS_CONTENT."""
         p = _prompts()
-        assert 'project-review.md' in p.COMMANDS_CONTENT
+        assert 'project-review.md' not in p.COMMANDS_CONTENT
 
-    def test_matches_prompt(self):
+    def test_skill_md_exists(self):
+        """SKILL_REVIEW_MD should exist as a skill template."""
         p = _prompts()
-        assert p.COMMANDS_CONTENT['project-review.md'] == p.REVIEW_PROMPT
+        assert hasattr(p, 'SKILL_REVIEW_MD')
+        assert isinstance(p.SKILL_REVIEW_MD, str)
+        assert len(p.SKILL_REVIEW_MD) > 50
 
 
 class TestRoutingTableIncludesReview:
-    """Scenario 3: 路由表包含 Review"""
+    """Scenario 3: 路由表包含 Review as embedded skill"""
 
     def test_review_in_routing(self):
         p = _prompts()
         routing = p.RULES_MODULES['routing']
-        assert 'Review' in routing or 'review' in routing
+        assert 'pactkit-review' in routing or 'Review' in routing
 
     def test_has_role(self):
         p = _prompts()
         routing = p.RULES_MODULES['routing']
         assert 'QA Engineer' in routing
 
-    def test_has_playbook(self):
+    def test_has_skill_reference(self):
         p = _prompts()
         routing = p.RULES_MODULES['routing']
-        assert 'project-review.md' in routing
+        assert 'pactkit-review' in routing
 
 
 class TestPlaybookContent:
@@ -126,9 +130,8 @@ class TestBackwardCompatibility:
         p = _prompts()
         expected = [
             'project-plan.md', 'project-act.md', 'project-check.md',
-            'project-done.md', 'project-init.md', 'project-doctor.md',
-            'project-draw.md', 'project-trace.md', 'project-release.md',
-            'project-sprint.md',
+            'project-done.md', 'project-init.md',
+            'project-sprint.md', 'project-hotfix.md', 'project-design.md',
         ]
         for cmd in expected:
             assert cmd in p.COMMANDS_CONTENT, f"Missing {cmd}"

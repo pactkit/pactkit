@@ -66,7 +66,7 @@ class TestAllConstantsAccessible:
     def test_commands_content(self):
         from pactkit.prompts import COMMANDS_CONTENT
         assert isinstance(COMMANDS_CONTENT, dict)
-        assert len(COMMANDS_CONTENT) >= 12
+        assert len(COMMANDS_CONTENT) >= 8
 
     def test_agents_expert(self):
         from pactkit.prompts import AGENTS_EXPERT

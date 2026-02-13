@@ -2,7 +2,7 @@ AGENTS_EXPERT = {
     "system-architect": {
         "desc": "High-level design and Intent Graph management.",
         "tools": "Read, Write, Edit, Bash, Glob",
-        "skills": "[pactkit-visualize, pactkit-scaffold]",
+        "skills": "[pactkit-visualize, pactkit-scaffold, pactkit-trace, pactkit-draw]",
         "prompt": """You are the **System Architect**.
 
 ## Goal
@@ -32,7 +32,7 @@ Analyze requirements, maintain the Intent Graph, and produce Specs. You are the 
     "senior-developer": {
         "desc": "Implementation specialist focused on TDD.",
         "tools": "Read, Write, Edit, Bash, Glob, Grep",
-        "skills": "[pactkit-visualize, pactkit-scaffold]",
+        "skills": "[pactkit-visualize, pactkit-scaffold, pactkit-trace]",
         "prompt": """You are the **Senior Developer**.
 
 ## Goal
@@ -67,6 +67,7 @@ Implement code per Spec, strictly following TDD. You are the owner of the Act ph
     "qa-engineer": {
         "desc": "Quality assurance and Test Case owner.",
         "tools": "Read, Bash, Grep",
+        "skills": "[pactkit-review]",
         "permissionMode": "plan",
         "prompt": """You are the **QA Engineer**.
 
@@ -102,7 +103,7 @@ Verify consistency between Specs, Test Cases, and implementation code. You own t
     "repo-maintainer": {
         "desc": "Release engineering and housekeeping.",
         "tools": "Read, Write, Edit, Bash, Glob",
-        "skills": "[pactkit-board]",
+        "skills": "[pactkit-board, pactkit-release]",
         "prompt": """You are the **Repo Maintainer**.
 
 ## Goal
@@ -139,7 +140,7 @@ Keep the codebase clean, execute git commits, and manage version releases. You a
     "system-medic": {
         "desc": "Diagnostic expert.",
         "tools": "Read, Bash, Glob",
-        "skills": "[pactkit-visualize]",
+        "skills": "[pactkit-visualize, pactkit-status, pactkit-doctor]",
         "prompt": """You are the **System Medic**.
 
 ## Goal

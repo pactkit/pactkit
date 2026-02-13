@@ -155,9 +155,9 @@ class TestRoutingTableUnchanged:
         p = _prompts()
         routing = p.RULES_MODULES['routing']
         expected = [
-            'project-init', 'project-plan', 'project-act', 'project-trace',
-            'project-check', 'project-done', 'project-draw', 'project-doctor',
-            'project-sprint', 'project-review', 'project-hotfix',
+            'project-init', 'project-plan', 'project-act',
+            'project-check', 'project-done',
+            'project-sprint', 'project-hotfix', 'project-design',
         ]
         for cmd in expected:
             assert cmd in routing, f"Missing {cmd} in routing"
@@ -175,9 +175,8 @@ class TestBackwardCompatibility:
         p = _prompts()
         expected = [
             'project-plan.md', 'project-act.md', 'project-check.md',
-            'project-done.md', 'project-init.md', 'project-doctor.md',
-            'project-draw.md', 'project-trace.md', 'project-release.md',
-            'project-sprint.md', 'project-review.md', 'project-hotfix.md',
+            'project-done.md', 'project-init.md',
+            'project-sprint.md', 'project-hotfix.md', 'project-design.md',
         ]
         for cmd in expected:
             assert cmd in p.COMMANDS_CONTENT, f"Missing {cmd}"

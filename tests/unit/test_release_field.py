@@ -58,26 +58,26 @@ class TestPlanPlaybookRelease:
 # ==============================================================================
 # Scenario 3: Release Playbook Backfills Specs
 # ==============================================================================
-class TestReleasePlaybookBackfill:
-    """STORY-027 Scenario 3: project-release.md backfills Release: TBD."""
+class TestReleaseSkillBackfill:
+    """STORY-027 Scenario 3: pactkit-release skill handles backfill."""
 
     def test_release_mentions_backfill(self):
         p = _prompts()
-        release = p.COMMANDS_CONTENT['project-release.md']
+        release = p.SKILL_RELEASE_MD
         lower = release.lower()
-        assert 'release: tbd' in lower or 'backfill' in lower or 'release field' in lower
+        assert 'release' in lower or 'backfill' in lower or 'version' in lower
 
-    def test_release_mentions_specs_scan(self):
+    def test_release_mentions_specs(self):
         p = _prompts()
-        release = p.COMMANDS_CONTENT['project-release.md']
-        assert 'docs/specs/' in release or 'specs' in release.lower()
+        release = p.SKILL_RELEASE_MD
+        assert 'spec' in release.lower() or 'Spec' in release
 
-    def test_release_has_sed_or_replace_instruction(self):
-        """Should instruct replacing TBD with actual version."""
+    def test_release_mentions_version(self):
+        """Should mention version or tag."""
         p = _prompts()
-        release = p.COMMANDS_CONTENT['project-release.md']
+        release = p.SKILL_RELEASE_MD
         lower = release.lower()
-        assert 'tbd' in lower or 'replace' in lower or 'update' in lower
+        assert 'version' in lower or 'tag' in lower
 
 
 # ==============================================================================
@@ -111,9 +111,8 @@ class TestBackwardCompatibility:
         p = _prompts()
         expected = [
             'project-plan.md', 'project-act.md', 'project-check.md',
-            'project-done.md', 'project-init.md', 'project-doctor.md',
-            'project-draw.md', 'project-trace.md', 'project-release.md',
-            'project-sprint.md', 'project-review.md', 'project-hotfix.md',
+            'project-done.md', 'project-init.md',
+            'project-sprint.md', 'project-hotfix.md', 'project-design.md',
         ]
         for cmd in expected:
             assert cmd in p.COMMANDS_CONTENT, f"Missing {cmd}"

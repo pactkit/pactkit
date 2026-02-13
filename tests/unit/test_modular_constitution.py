@@ -114,10 +114,10 @@ class TestContentCompleteness:
         assert 'project-act' in routing
         assert 'project-check' in routing
         assert 'project-done' in routing
-        assert 'project-trace' in routing
-        assert 'project-draw' in routing
         assert 'project-init' in routing
-        assert 'project-doctor' in routing
+        # Former commands now embedded as skills
+        assert 'pactkit-trace' in routing
+        assert 'pactkit-draw' in routing
 
 
 class TestDeployedCoreMatchesSource:

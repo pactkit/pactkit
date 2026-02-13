@@ -8,7 +8,7 @@
 
 **Ship features with AI agents that follow specs, not vibes.**
 
-> PactKit gives Claude Code a structured operating system — 9 specialized agents, 14 commands, and a full Plan-Act-Check-Done lifecycle. One `pip install` and your AI assistant writes specs before code, runs TDD, and never commits without passing tests.
+> PactKit gives Claude Code a structured operating system — 9 specialized agents, 8 commands, and a full Plan-Act-Check-Done lifecycle. One `pip install` and your AI assistant writes specs before code, runs TDD, and never commits without passing tests.
 
 ### What it looks like
 
@@ -41,7 +41,7 @@ Requires Python 3.10+ and [Claude Code](https://docs.anthropic.com/en/docs/claud
 ## Quick Start
 
 ```bash
-# Deploy full toolkit (14 commands + 9 agents + 3 skills)
+# Deploy full toolkit (8 commands + 9 agents + 9 skills)
 pactkit init
 
 # Update to latest playbooks (preserves your config)
@@ -81,15 +81,21 @@ Or run the full cycle in one command:
 | **Act** | `/project-act` | Senior Developer | Visual scan → TDD loop → Regression check |
 | **Check** | `/project-check` | QA + Security | 6-phase deep audit (Security/Quality/Spec alignment) |
 | **Done** | `/project-done` | Repo Maintainer | Safe regression gate → Archive → Conventional commit |
-| **Trace** | `/project-trace` | Code Explorer | Call graph tracing → Sequence diagram |
-| **Draw** | `/project-draw` | Visual Architect | Generate Draw.io XML architecture diagrams |
-| **Status** | `/project-status` | System Medic | Cold-start project overview → Sprint + Git + Health report |
-| **Doctor** | `/project-doctor` | System Medic | Configuration drift detection → Health report |
-| **Review** | `/project-review` | QA Engineer | PR review with SOLID/Security/Quality checklists |
 | **Sprint** | `/project-sprint` | Team Lead | One-command automated PDCA orchestration |
 | **Hotfix** | `/project-hotfix` | Senior Developer | Fast-track fix bypassing PDCA (with traceability) |
-| **Release** | `/project-release` | Repo Maintainer | Version bump → Archive → Git tag → Changelog |
+| **Init** | `/project-init` | System Architect | Bootstrap project structure and governance |
 | **Design** | `/project-design` | Product Designer | PRD generation → Story decomposition → Board setup |
+
+### Embedded Skills (auto-invoked by commands)
+
+| Skill | Embedded In | Purpose |
+|-------|-------------|---------|
+| Trace | Plan, Act | Call graph tracing → Sequence diagram |
+| Draw | Plan, Design | Generate Draw.io XML architecture diagrams |
+| Status | Init | Cold-start project overview → Sprint + Git + Health report |
+| Doctor | Init | Configuration drift detection → Health report |
+| Review | Check | PR review with SOLID/Security/Quality checklists |
+| Release | Done | Version bump → Archive → Git tag → Changelog |
 
 ## Agent Ensemble
 
@@ -141,9 +147,9 @@ PactKit deploys to `~/.claude/`:
 ~/.claude/
 ├── CLAUDE.md                 ← Modular constitution (entry point)
 ├── rules/                    ← 6 rule modules
-├── commands/                 ← 14 command playbooks
+├── commands/                 ← 8 command playbooks
 ├── agents/                   ← 9 agent definitions
-└── skills/                   ← 3 skill packages
+└── skills/                   ← 9 skill packages (3 scripted + 6 prompt-only)
     ├── pactkit-visualize/
     ├── pactkit-board/
     └── pactkit-scaffold/

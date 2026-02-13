@@ -27,21 +27,21 @@ VALID_COMMANDS = frozenset({
     'project-check',
     'project-done',
     'project-init',
-    'project-doctor',
-    'project-draw',
-    'project-trace',
     'project-sprint',
-    'project-review',
     'project-hotfix',
     'project-design',
-    'project-release',
-    'project-status',
 })
 
 VALID_SKILLS = frozenset({
     'pactkit-visualize',
     'pactkit-board',
     'pactkit-scaffold',
+    'pactkit-trace',
+    'pactkit-draw',
+    'pactkit-status',
+    'pactkit-doctor',
+    'pactkit-review',
+    'pactkit-release',
 })
 
 VALID_RULES = frozenset({
@@ -54,6 +54,16 @@ VALID_RULES = frozenset({
 })
 
 VALID_STACKS = frozenset({'auto', 'python', 'node', 'go', 'java'})
+
+# Commands deprecated in v1.2.0 — converted to skills (STORY-011)
+DEPRECATED_COMMANDS = frozenset({
+    'project-trace',
+    'project-draw',
+    'project-status',
+    'project-doctor',
+    'project-review',
+    'project-release',
+})
 
 
 # ---------------------------------------------------------------------------
@@ -242,6 +252,12 @@ def validate_config(config: dict) -> None:
         for name in user_list:
             if not isinstance(name, str):
                 warnings.warn(f"Config key '{key}' contains non-string value: {name!r}")
+            elif key == 'commands' and name in DEPRECATED_COMMANDS:
+                skill_name = f"pactkit-{name.removeprefix('project-')}"
+                warnings.warn(
+                    f"Deprecated command '{name}' — converted to skill "
+                    f"'{skill_name}' in v1.2.0. Remove from commands list."
+                )
             elif name not in valid_set:
                 warnings.warn(f"Unknown {key.rstrip('s')}: {name}")
 

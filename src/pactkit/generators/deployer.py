@@ -156,7 +156,8 @@ def _deploy_marketplace(target=None):
 
 def _deploy_skills(skills_dir, enabled_skills):
     """Deploy skill directories filtered by config."""
-    all_skill_defs = [
+    # Skills with executable scripts
+    scripted_skill_defs = [
         {
             'name': 'pactkit-visualize',
             'skill_md': prompts.SKILL_VISUALIZE_MD,
@@ -177,9 +178,21 @@ def _deploy_skills(skills_dir, enabled_skills):
         },
     ]
 
+    # Prompt-only skills (SKILL.md only, no executable script) — STORY-011
+    prompt_only_skill_defs = [
+        {'name': 'pactkit-trace', 'skill_md': prompts.SKILL_TRACE_MD},
+        {'name': 'pactkit-draw', 'skill_md': prompts.SKILL_DRAW_MD},
+        {'name': 'pactkit-status', 'skill_md': prompts.SKILL_STATUS_MD},
+        {'name': 'pactkit-doctor', 'skill_md': prompts.SKILL_DOCTOR_MD},
+        {'name': 'pactkit-review', 'skill_md': prompts.SKILL_REVIEW_MD},
+        {'name': 'pactkit-release', 'skill_md': prompts.SKILL_RELEASE_MD},
+    ]
+
     enabled_set = set(enabled_skills)
     deployed = 0
-    for sd in all_skill_defs:
+
+    # Deploy scripted skills (SKILL.md + script)
+    for sd in scripted_skill_defs:
         if sd['name'] not in enabled_set:
             continue
         skill_dir = skills_dir / sd['name']
@@ -188,6 +201,16 @@ def _deploy_skills(skills_dir, enabled_skills):
 
         atomic_write(skill_dir / 'SKILL.md', sd['skill_md'])
         atomic_write(scripts_dir / sd['script_name'], sd['script_source'])
+        deployed += 1
+
+    # Deploy prompt-only skills (SKILL.md only)
+    for sd in prompt_only_skill_defs:
+        if sd['name'] not in enabled_set:
+            continue
+        skill_dir = skills_dir / sd['name']
+        skill_dir.mkdir(parents=True, exist_ok=True)
+
+        atomic_write(skill_dir / 'SKILL.md', sd['skill_md'])
         deployed += 1
 
     return deployed

@@ -1,5 +1,6 @@
 """
 STORY-010: Release v1.1.0 — docs sync + version alignment.
+(Updated for STORY-011: 14→8 commands, 3→9 skills)
 """
 from pathlib import Path
 
@@ -14,28 +15,29 @@ def _root():
 # ===========================================================================
 
 class TestReadmeAccuracy:
-    """README must reflect 14 commands and include project-status."""
+    """README must reflect 8 commands and 9 skills."""
 
     def test_command_count_in_tagline(self):
         readme = (_root() / 'README.md').read_text()
-        assert '14 commands' in readme
+        assert '8 commands' in readme
 
     def test_command_count_in_quickstart(self):
         readme = (_root() / 'README.md').read_text()
-        assert '14 commands' in readme
+        assert '8 commands' in readme
 
-    def test_no_stale_13_commands(self):
+    def test_no_stale_14_commands(self):
         readme = (_root() / 'README.md').read_text()
-        assert '13 commands' not in readme
-        assert '13 command' not in readme
+        assert '14 commands' not in readme
+        assert '14 command' not in readme
 
-    def test_project_status_in_workflow_table(self):
+    def test_project_status_in_skills_table(self):
+        """project-status is now pactkit-status skill, mentioned in README."""
         readme = (_root() / 'README.md').read_text()
-        assert '/project-status' in readme or 'project-status' in readme
+        assert 'pactkit-status' in readme or 'Status' in readme
 
-    def test_14_command_playbooks_in_config(self):
+    def test_8_command_playbooks_in_config(self):
         readme = (_root() / 'README.md').read_text()
-        assert '14 command playbooks' in readme or '14 command' in readme
+        assert '8 command playbooks' in readme or '8 command' in readme
 
 
 # ===========================================================================
@@ -79,13 +81,13 @@ class TestClaudeMdAccuracy:
         claude_md = (_root() / '.claude' / 'CLAUDE.md').read_text()
         assert '846 tests' not in claude_md
 
-    def test_no_stale_13_commands(self):
+    def test_no_stale_14_commands(self):
         claude_md = (_root() / '.claude' / 'CLAUDE.md').read_text()
-        assert '13 command' not in claude_md
+        assert '14 command' not in claude_md
 
-    def test_has_14_commands_reference(self):
+    def test_has_8_commands_reference(self):
         claude_md = (_root() / '.claude' / 'CLAUDE.md').read_text()
-        assert '14 command' in claude_md
+        assert '8 command' in claude_md
 
 
 # ===========================================================================

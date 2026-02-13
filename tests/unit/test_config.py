@@ -35,11 +35,11 @@ class TestGetDefaultConfig:
 
     def test_default_commands_count(self):
         cfg = _config().get_default_config()
-        assert len(cfg['commands']) == 14
+        assert len(cfg['commands']) == 8
 
     def test_default_skills_count(self):
         cfg = _config().get_default_config()
-        assert len(cfg['skills']) == 3
+        assert len(cfg['skills']) == 9
 
     def test_default_rules_count(self):
         cfg = _config().get_default_config()

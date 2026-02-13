@@ -178,9 +178,8 @@ class TestBackwardCompatibility:
         p = _prompts()
         expected = [
             'project-plan.md', 'project-act.md', 'project-check.md',
-            'project-done.md', 'project-init.md', 'project-doctor.md',
-            'project-draw.md', 'project-trace.md', 'project-release.md',
-            'project-sprint.md', 'project-review.md', 'project-hotfix.md',
+            'project-done.md', 'project-init.md',
+            'project-sprint.md', 'project-hotfix.md', 'project-design.md',
         ]
         for cmd in expected:
             assert cmd in p.COMMANDS_CONTENT, f"Missing {cmd}"

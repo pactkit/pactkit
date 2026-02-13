@@ -206,3 +206,239 @@ python3 scripts/scaffold.py create_skill skill-name "Description of the skill"
 - Ad-hoc: Use `create_skill` to scaffold a new reusable skill
 """
 
+# ==============================================================================
+# PROMPT-ONLY SKILL TEMPLATES (v1.2.0 — STORY-011)
+# These skills have no executable script; they provide instruction context
+# that is embedded into PDCA commands.
+# ==============================================================================
+
+SKILL_TRACE_MD = """---
+name: pactkit-trace
+description: "Deep code tracing and execution flow analysis"
+---
+
+# PactKit Trace
+
+Deep code analysis and execution path tracing via static analysis.
+
+## When Invoked
+- **Plan Phase 1** (Archaeology): Trace existing logic before designing changes.
+- **Act Phase 1** (Precision Targeting): Confirm call sites before touching code.
+
+## Protocol
+
+### 1. Feature Discovery
+- Use `Grep` to locate entry points (API route, CLI arg, Event handler).
+- Map core files involved — don't read everything yet.
+
+### 2. Call Graph Analysis
+- Run `visualize --mode call --entry <function_name>` to obtain call chains.
+- Read `docs/architecture/graphs/call_graph.mmd` to see all reachable functions.
+
+### 3. Deep Tracing
+- Follow call chain file by file, recording data transformations.
+- Note how data structures change (e.g., `dict` -> `UserObj` -> `JSON`).
+
+### 4. Visual Synthesis
+Output a **Mermaid Sequence Diagram** to visualize the flow.
+
+### 5. Archaeologist Report
+- **Patterns**: Design Patterns used.
+- **Debt**: Hardcoded values, complex logic, lack of tests.
+- **Key Files**: Top 3 files critical to this feature.
+"""
+
+SKILL_DRAW_MD = """---
+name: pactkit-draw
+description: "Generate Draw.io XML architecture diagrams"
+---
+
+# PactKit Draw
+
+Generate system architecture diagrams using Draw.io XML. Supports architecture, dataflow, and deployment diagram types.
+
+## When Invoked
+- **Plan Phase 2** (Design): Generate architecture diagrams on demand.
+- **Design Phase 2** (Architecture): Visualize system-level design.
+
+## Protocol
+
+### 1. Detect Diagram Type
+| Type | Trigger Keywords | Layout |
+|------|-----------------|--------|
+| **architecture** | architecture, system, layered | Top -> Bottom |
+| **dataflow** | dataflow, process, pipeline | Left -> Right |
+| **deployment** | deployment, infra, cloud, k8s | Grouped |
+
+### 2. Identify Components
+Classify each component into a style role (Input, Process, Decision, Output, Storage, Container, External).
+
+### 3. Generate XML
+Write the `.drawio` file following the Enterprise Style Dictionary and Anti-Bug Rules.
+
+## Anti-Bug Rules
+- Every `mxCell` style MUST include `html=1;whiteSpace=wrap;`.
+- Every `id` MUST be unique (use prefixes: `n_`, `e_`, `c_`).
+- Edge `mxCell` MUST have valid `source` and `target` attributes.
+- Container nodes MUST include `container=1` in their style.
+"""
+
+SKILL_STATUS_MD = """---
+name: pactkit-status
+description: "Project state overview for cold-start orientation"
+---
+
+# PactKit Status
+
+Read-only project state report. Provides sprint board summary, git state, and health indicators.
+
+## When Invoked
+- **Init Phase 6** (Session Context): Bootstrap initial context.
+- **Cold-start detection**: Auto-invoked when session needs orientation.
+
+## Protocol
+
+### 1. Gather Data
+- Check if `docs/product/sprint_board.md` exists.
+- If yes: extract story counts by section (Backlog / In Progress / Done).
+- Count Specs in `docs/specs/*.md` vs total board stories.
+- Check architecture graph freshness.
+
+### 2. Git State
+- Current branch, uncommitted changes, active feature branches.
+
+### 3. Output Report
+```
+## Project Status Report
+### Sprint Board
+- Backlog: {N} stories
+- In Progress: {N} stories
+- Done: {N} stories
+### Git State
+- Branch: {current}
+- Uncommitted: {Y/N}
+### Health Indicators
+- Architecture graphs: {fresh/stale/missing}
+- Specs coverage: {N/N}
+### Recommended Next Action
+{Decision tree}
+```
+
+> **CONSTRAINT**: This skill is read-only. It does not modify any files.
+"""
+
+SKILL_DOCTOR_MD = """---
+name: pactkit-doctor
+description: "Diagnose project health status"
+---
+
+# PactKit Doctor
+
+Diagnostic tool for project health — config drift, missing files, broken tests.
+
+## When Invoked
+- **Init** (auto-check): Verify project structure after initialization.
+- Standalone diagnostic when project health is in question.
+
+## Protocol
+
+### 1. Structural Health
+- Run `visualize` to check architecture graph generation.
+- Run `visualize --mode class` for class diagram verification.
+- Check `docs/test_cases/` existence.
+
+### 2. Infrastructure & Data
+- Verify `.claude/pactkit.yaml` exists and is valid.
+- Check Specs vs Board linkage (every board story should have a spec).
+- Check if `tests/e2e/` is empty.
+
+### 3. Report
+Output a health summary table:
+
+| Check Item | Status | Description |
+|------------|:------:|-------------|
+| PactKit Config | OK/WARN | ... |
+| Architecture Graphs | OK/WARN | ... |
+| Spec-Board Linkage | OK/WARN | ... |
+| Tests | OK/WARN | ... |
+"""
+
+SKILL_REVIEW_MD = """---
+name: pactkit-review
+description: "PR Code Review with structured SOLID, security, and quality checklists"
+---
+
+# PactKit Review
+
+Structured PR code review with severity-ranked findings.
+
+## When Invoked
+- **Check Phase 4** (PR variant): When `/project-check` is given a PR number/URL.
+- **Sprint Stage B**: As part of automated QA in Sprint orchestration.
+
+## Severity Levels
+| Level | Name | Action |
+|-------|------|--------|
+| **P0** | Critical | Must block merge |
+| **P1** | High | Should fix before merge |
+| **P2** | Medium | Fix in PR or follow-up |
+| **P3** | Low | Optional improvement |
+
+## Protocol
+
+### 1. PR Information
+- Fetch PR metadata: `gh pr view $ARG --json title,body,author,baseRefName,headRefName,files`
+- Fetch PR diff: `gh pr diff $ARG`
+- Extract STORY-ID from title/body if present.
+
+### 2. Review Checklists
+- **SOLID**: SRP, OCP, LSP, ISP, DIP analysis on changed files.
+- **Security**: OWASP baseline (injection, auth, secrets, XSS, SSRF).
+- **Quality**: Error handling, performance, boundary conditions, logic correctness.
+
+### 3. Report
+```
+## Code Review: PR $ARG
+**Result**: APPROVE / REQUEST_CHANGES
+### Issues
+- [P0] [file:line] Description
+- [P1] [file:line] Description
+### Spec Alignment
+- [x] R1: Implemented
+- [ ] R2: Missing
+```
+
+> **CONSTRAINT**: This skill is read-only. Do not modify code files.
+"""
+
+SKILL_RELEASE_MD = """---
+name: pactkit-release
+description: "Version release: snapshot, archive, and Git tag"
+---
+
+# PactKit Release
+
+Version release management — update versions, snapshot architecture, create Git tags.
+
+## When Invoked
+- **Done Phase 4** (release variant): When a version bump story is being closed.
+- Standalone release workflow when cutting a new version.
+
+## Protocol
+
+### 1. Version Update
+- Run `update_version "$VERSION"` via pactkit-board skill.
+- Update the project's package manifest (e.g., `pyproject.toml`, `package.json`).
+- Backfill Specs: scan `docs/specs/*.md` for `Release: TBD` and update completed ones.
+
+### 2. Architecture Snapshot
+- Run `visualize` (all three modes: file, class, call).
+- Run `snapshot "$VERSION"` via pactkit-board skill.
+- Result: graphs saved to `docs/architecture/snapshots/{version}_*.mmd`.
+
+### 3. Git Operations
+- Run `archive` via pactkit-board skill.
+- Commit: `git commit -am "chore(release): $VERSION"`.
+- Tag: `git tag $VERSION`.
+"""
+

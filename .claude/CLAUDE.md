@@ -40,10 +40,10 @@ src/pactkit/
 │   └── deployer.py     ← Core deployment orchestrator (classic/plugin/marketplace)
 ├── prompts/            ← All prompt templates and constants
 │   ├── agents.py       ← 9 agent definitions
-│   ├── commands.py     ← 14 command playbooks
+│   ├── commands.py     ← 8 command playbooks
 │   ├── references.py   ← Reference checklists (SOLID/Security/Quality)
 │   ├── rules.py        ← 6 constitution rule modules + CLAUDE_MD_TEMPLATE
-│   ├── skills.py       ← 3 skill definitions
+│   ├── skills.py       ← 9 skill definitions
 │   └── workflows.py    ← PDCA workflow prompts + LANG_PROFILES
 └── skills/             ← Skill script source files
     ├── board.py        ← Sprint board operations

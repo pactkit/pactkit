@@ -66,24 +66,17 @@ class TestCheckCommandRestricted:
         assert 'Glob' in tools_str
 
 
-class TestTraceCommandRestricted:
-    """Scenario 3: Trace 只读限制"""
+class TestTraceIsSkill:
+    """Scenario 3: Trace is now a skill (STORY-011), not a command."""
 
-    def test_trace_has_allowed_tools(self):
+    def test_trace_not_in_commands(self):
         from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT['project-trace.md']
-        fm = _parse_frontmatter(content)
-        assert 'allowed-tools' in fm, 'project-trace.md 缺少 allowed-tools'
+        assert 'project-trace.md' not in COMMANDS_CONTENT
 
-    def test_trace_only_readonly_tools(self):
-        from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT['project-trace.md']
-        fm = _parse_frontmatter(content)
-        tools_str = fm['allowed-tools']
-        assert 'Write' not in tools_str
-        assert 'Edit' not in tools_str
-        assert 'Read' in tools_str
-        assert 'Bash' in tools_str
+    def test_trace_skill_exists(self):
+        from pactkit.prompts import SKILL_TRACE_MD
+        assert isinstance(SKILL_TRACE_MD, str)
+        assert SKILL_TRACE_MD.strip().startswith('---')
 
 
 class TestArgumentsPlaceholder:
@@ -100,9 +93,9 @@ class TestArgumentsPlaceholder:
         content = COMMANDS_CONTENT['project-act.md']
         assert '$ARGUMENTS' in content
 
-    def test_trace_has_arguments_placeholder(self):
+    def test_sprint_has_arguments_placeholder(self):
         from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT['project-trace.md']
+        content = COMMANDS_CONTENT['project-sprint.md']
         assert '$ARGUMENTS' in content
 
 

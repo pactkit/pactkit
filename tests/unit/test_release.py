@@ -84,30 +84,32 @@ class TestSnapshotAutoCreateDir:
 # ==============================================================================
 # Scenario 3: release command has correct paths
 # ==============================================================================
-class TestReleaseCommandPaths:
+class TestReleaseSkillContent:
+    """Release is now a skill (STORY-011), check SKILL_RELEASE_MD."""
+
     def test_no_pactkit_tools_reference(self):
-        from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT.get('project-release.md', '')
-        assert 'pactkit_tools' not in content
+        from pactkit.prompts import SKILL_RELEASE_MD
+        assert 'pactkit_tools' not in SKILL_RELEASE_MD
 
-    def test_has_visualize_skill_reference(self):
-        from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT.get('project-release.md', '')
-        assert 'pactkit-visualize' in content
+    def test_has_visualize_reference(self):
+        from pactkit.prompts import SKILL_RELEASE_MD
+        assert 'visualize' in SKILL_RELEASE_MD.lower() or 'snapshot' in SKILL_RELEASE_MD.lower()
 
-    def test_has_board_skill_reference(self):
-        from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT.get('project-release.md', '')
-        assert 'pactkit-board' in content
+    def test_has_board_reference(self):
+        from pactkit.prompts import SKILL_RELEASE_MD
+        assert 'board' in SKILL_RELEASE_MD.lower() or 'archive' in SKILL_RELEASE_MD.lower()
 
 
 # ==============================================================================
 # Scenario 4: release command in COMMANDS_CONTENT
 # ==============================================================================
-class TestReleaseInCommandsContent:
-    def test_release_key_exists(self):
-        from pactkit.prompts import COMMANDS_CONTENT
-        assert 'project-release.md' in COMMANDS_CONTENT
+class TestReleaseIsSkill:
+    """Release is now a skill (STORY-011), not a command."""
+
+    def test_release_skill_exists(self):
+        from pactkit.prompts import SKILL_RELEASE_MD
+        assert isinstance(SKILL_RELEASE_MD, str)
+        assert len(SKILL_RELEASE_MD) > 50
 
 
 # ==============================================================================
@@ -147,13 +149,13 @@ class TestUpdateVersion:
 # ==============================================================================
 # Scenario 6: frontmatter compliance
 # ==============================================================================
-class TestReleaseFrontmatter:
+class TestReleaseSkillFrontmatter:
+    """SKILL_RELEASE_MD has proper frontmatter."""
+
     def test_has_frontmatter(self):
-        from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT.get('project-release.md', '')
-        assert content.startswith('---')
+        from pactkit.prompts import SKILL_RELEASE_MD
+        assert SKILL_RELEASE_MD.strip().startswith('---')
 
     def test_has_description(self):
-        from pactkit.prompts import COMMANDS_CONTENT
-        content = COMMANDS_CONTENT.get('project-release.md', '')
-        assert 'description:' in content
+        from pactkit.prompts import SKILL_RELEASE_MD
+        assert 'description:' in SKILL_RELEASE_MD

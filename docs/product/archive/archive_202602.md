@@ -59,3 +59,15 @@
 - [x] Create CHANGELOG.md
 - [x] Run tests + build verification
 - [x] Git tag v1.1.0
+
+### [STORY-011] PDCA Slim — 辅助命令降级为 Skill，精简用户界面
+> Spec: docs/specs/STORY-011.md
+
+- [x] Remove 6 commands from VALID_COMMANDS and COMMANDS_CONTENT
+- [x] Create 6 new SKILL_*_MD templates in skills.py
+- [x] Register 6 new skills in VALID_SKILLS
+- [x] Update PDCA command prompts to reference skills instead of sibling commands
+- [x] Update routing table and agent skill references
+- [x] Update deployer to deploy 9 skills
+- [x] Add deprecation warnings for removed commands in load_config
+- [x] Update all count-based tests

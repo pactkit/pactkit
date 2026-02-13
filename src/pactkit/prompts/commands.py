@@ -1,16 +1,10 @@
 from pactkit.prompts.workflows import (
     DESIGN_PROMPT,
-    DRAW_PROMPT_TEMPLATE,
     HOTFIX_PROMPT,
-    REVIEW_PROMPT,
     SPRINT_PROMPT,
-    TRACE_PROMPT,
 )
 
 COMMANDS_CONTENT = {
-    "project-draw.md": DRAW_PROMPT_TEMPLATE,
-    "project-trace.md": TRACE_PROMPT,
-
     "project-plan.md": """---
 description: "Analyze requirements, create Spec and Story"
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
@@ -25,7 +19,7 @@ allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 1.  **Analyze Intent**: New feature (Expansion) or Bugfix/Refactor (Modification)?
 2.  **Strategy**:
     - If **New Feature**: Focus on `system_design.mmd` (Architecture).
-    - If **Modification**: Focus on `/project-trace` (Logic Flow).
+    - If **Modification**: Focus on pactkit-trace skill (Logic Flow).
 
 ## 🛡️ Phase 0.5: Init Guard (Auto-detect)
 > **INSTRUCTION**: Check if the project has been initialized before proceeding.
@@ -42,9 +36,9 @@ allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ## 🎬 Phase 1: Archaeology (The "Know Before You Change" Step)
 1.  **Visual Scan**: Run `visualize` to see the module dependency graph.
     - **Mode Selection**: Use `--mode class` for structure analysis, `--mode call` for logic modification, default for overview.
-2.  **Logic Trace (CRITICAL)**:
-    - If modifying existing logic, you MUST run:
-      `/project-trace "How does [Feature X] currently work?"`
+2.  **Logic Trace (CRITICAL)** — use pactkit-trace skill:
+    - If modifying existing logic, trace the current implementation:
+      Use `Grep` to locate entry points, then `visualize --mode call --entry <func>` to map call chains.
     - *Goal*: Identify the exact function/class responsible for the logic.
 
 ## 🎬 Phase 2: Design & Impact
@@ -99,9 +93,9 @@ allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ## 🎬 Phase 1: Precision Targeting
 1.  **Visual Scan**: Run `visualize --focus <module>` to see neighbors.
 2.  **Call Chain**: Run `visualize --mode call --entry <function>` to trace call dependencies.
-3.  **Trace Verification**:
+3.  **Trace Verification** — use pactkit-trace skill:
     - Before touching any code, confirm the call site.
-    - Run: `/project-trace "Find where [Function X] is called"`
+    - Use `Grep` to find all callers, then `visualize --mode call --entry <func>` to trace dependencies.
     - *Goal*: Ensure you don't break existing callers.
 
 ## 🎬 Phase 2: Test Scaffolding (TDD)
@@ -347,6 +341,12 @@ IF `pytest-cov` is available, run tests with coverage on changed source files:
 4.  **Skip**: If no deployer is detected, skip this phase and note "No deployer found — skipping deploy verification."
 5.  **Gate**: If deployment or verification fails, **STOP**. Do NOT proceed to commit.
 
+## 🎬 Phase 3.8: Release (Conditional) — use pactkit-release skill
+> If this Story involves a version bump, invoke the release workflow:
+1.  **Detect**: Check if `pyproject.toml` version was changed in this Story.
+2.  **If yes**: Run `update_version`, `snapshot`, and `archive` via pactkit-board skill. Tag with `git tag`.
+3.  **If no**: Skip to Phase 4.
+
 ## 🎬 Phase 4: Git Commit
 1.  **Format**: `feat(scope): <title from spec>`
 2.  **Execute**: Run the git commit command.
@@ -440,150 +440,9 @@ allowed-tools: [Read, Write, Edit, Bash, Glob]
 2.  **Advice**: "⚠️ IMPORTANT: Run `/project-plan 'Reverse engineer'` to align the HLD."
 """,
 
-    "project-doctor.md": """---
-description: "Diagnose project health status"
-allowed-tools: [Read, Bash, Glob]
----
-
-# Command: Doctor (v18.6 Rich)
-- **Usage**: `/project-doctor`
-- **Agent**: System Medic
-
-## 🧠 Phase 0: The Thinking Process (Mandatory)
-> **INSTRUCTION**: Output a `<thinking>` block.
-1.  **Diagnosis**: Is this a configuration drift, missing file, or broken test?
-2.  **Scope**: Local (`.claude/`) vs Project (`src/`).
-
-## 🛡️ Phase 0.5: Init Guard (Auto-detect)
-> **INSTRUCTION**: Check if the project has been initialized before proceeding.
-1.  **Check Markers**: Verify the existence of ALL three:
-    - `.claude/pactkit.yaml` (project-level config)
-    - `docs/product/sprint_board.md` (sprint board)
-    - `docs/architecture/graphs/` (architecture graph directory)
-2.  **If ANY marker is missing**:
-    - Print: "⚠️ Project not initialized. Missing markers detected."
-    - Ask the user to choose: **(a)** Auto-fix by running `/project-init`, or **(b)** Continue diagnosis without initialization.
-    - If the user chooses **(a)**: Execute `/project-init`, then resume Doctor from Phase 1.
-    - If the user chooses **(b)**: Proceed to Phase 1 and include the missing markers in the health report.
-3.  **If ALL markers exist**: Skip silently to Phase 1.
-
-## 🎬 Phase 1: Structural Health
-1.  **Scan**: Run `python3 ~/.claude/skills/pactkit-visualize/scripts/visualize.py visualize`.
-2.  **Class Scan**: Run `python3 ~/.claude/skills/pactkit-visualize/scripts/visualize.py visualize --mode class`.
-3.  **Check**: `docs/test_cases/` existence.
-
-## 🎬 Phase 2: Infrastructure & Data
-1.  **Config**: Check `./.claude/pactkit.yaml`.
-2.  **Data**: Specs vs Board linkage.
-3.  **Tests**: Is `tests/e2e/` empty?
-
-## 🎬 Phase 3: Report
-1.  **Output**: Health Summary.
-""",
-
-    "project-release.md": """---
-description: "Version release: snapshot, archive, Tag"
-allowed-tools: [Read, Write, Edit, Bash, Glob]
----
-
-# Command: Release (v20.0)
-- **Usage**: `/project-release "$ARGUMENTS"`
-- **Agent**: Repo Maintainer
-
-## 🧠 Phase 0: The Thinking Process (Mandatory)
-> **INSTRUCTION**: Output a `<thinking>` block.
-1.  **Audit**: Are all Stories archived? Is the Board clean?
-2.  **Version**: Validate semantic version format.
-
-## 🎬 Phase 1: Version Update
-1.  **Update Meta**: Run `python3 ~/.claude/skills/pactkit-board/scripts/board.py update_version "$ARGUMENTS"`.
-2.  **Update Stack**: Update the project's package manifest version (see `LANG_PROFILES` package_file; e.g., `pyproject.toml`, `package.json`, `go.mod`, `pom.xml`).
-3.  **Backfill Specs**: Scan `docs/specs/*.md` for any Spec with `Release: TBD`. For each one whose Story is completed (archived or all tasks done), update the line to `- **Release**: $ARGUMENTS`.
-
-## 🎬 Phase 2: Architecture Snapshot
-1.  **Sync Graphs**:
-    - `python3 ~/.claude/skills/pactkit-visualize/scripts/visualize.py visualize`
-    - `python3 ~/.claude/skills/pactkit-visualize/scripts/visualize.py visualize --mode class`
-    - `python3 ~/.claude/skills/pactkit-visualize/scripts/visualize.py visualize --mode call`
-2.  **Snapshot**: Run `python3 ~/.claude/skills/pactkit-board/scripts/board.py snapshot "$ARGUMENTS"`.
-    - *Result*: Saves graphs to `docs/architecture/snapshots/{version}_*.mmd`.
-
-## 🎬 Phase 3: Git Operations
-1.  **Archive**: Run `python3 ~/.claude/skills/pactkit-board/scripts/board.py archive`.
-2.  **Commit**: `git commit -am "chore(release): $ARGUMENTS"`.
-3.  **Tag**: `git tag $ARGUMENTS`.
-""",
 }
 
-# ==============================================================================
-# 5b. SPRINT ORCHESTRATION PROMPT (STORY-014)
-# ==============================================================================
-
 # Register additional prompts into COMMANDS_CONTENT
-COMMANDS_CONTENT["project-status.md"] = """---
-description: "Project state overview for cold-start orientation"
-allowed-tools: [Read, Bash, Glob, Grep]
----
-
-# Command: Status (v1.0)
-- **Usage**: `/project-status`
-- **Agent**: System Medic
-
-> **PRINCIPLE**: This is a **read-only** command. It does not modify any files or create artifacts.
-
-## 🧠 Phase 0: The Thinking Process (Mandatory)
-> **INSTRUCTION**: Output a `<thinking>` block.
-1.  **Context**: Is this project initialized (has `docs/product/sprint_board.md`)?
-2.  **Scope**: What information can be gathered (board, git, tests)?
-
-## 🎬 Phase 1: Gather Data
-1.  **Check Init Status**: Does `docs/product/sprint_board.md` exist?
-    - If **YES**: Read it and extract story counts by section (Backlog / In Progress / Done).
-    - If **NO**: Note "Project not initialized" and skip to Phase 2 (Git State only).
-2.  **Specs Coverage**: Count files in `docs/specs/*.md` and compare to total stories on the board.
-3.  **Architecture Graphs**: Check if `docs/architecture/graphs/code_graph.mmd` exists and its last-modified date.
-
-## 🎬 Phase 2: Git State
-1.  **Branch**: Run `git branch --show-current`.
-2.  **Uncommitted Changes**: Run `git status --short` and summarize.
-3.  **Active Feature Branches**: Run `git branch --list 'feature/*' 'fix/*'`.
-
-## 🎬 Phase 3: Output Report
-Output the following structured report directly to the terminal:
-
-```
-## Project Status Report
-
-### Sprint Board
-- 📋 Backlog: {N} stories
-- 🔄 In Progress: {N} stories {list IDs + titles if any}
-- ✅ Done: {N} stories
-
-### Git State
-- Branch: {current branch}
-- Uncommitted changes: {Y/N, summary}
-- Active feature branches: {list or "None"}
-
-### Health Indicators
-- Architecture graphs: {fresh/stale/missing}
-- Specs coverage: {N stories with specs / N total}
-
-### Recommended Next Action
-{Decision tree:
-  - If In Progress stories exist → `/project-act STORY-XXX`
-  - If only Backlog stories → `/project-plan` to pick one
-  - If board is empty or all Done → `/project-design` or `/project-plan` for next iteration
-  - If project not initialized → `/project-init`}
-```
-
-## 🎬 Phase 4: Context Refresh (Conditional)
-> Only if the project is initialized (sprint_board.md exists).
-1.  **Check**: Does `docs/product/context.md` exist?
-2.  **Refresh**: If the project is initialized, suggest running `/project-done` or the next PDCA command to refresh `context.md`.
-    - This command does not write files — the refresh happens via downstream commands.
-"""
-
 COMMANDS_CONTENT["project-sprint.md"] = SPRINT_PROMPT
-COMMANDS_CONTENT["project-review.md"] = REVIEW_PROMPT
 COMMANDS_CONTENT["project-hotfix.md"] = HOTFIX_PROMPT
 COMMANDS_CONTENT["project-design.md"] = DESIGN_PROMPT

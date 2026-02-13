@@ -166,8 +166,8 @@ class TestBackwardCompatibility:
         from pactkit.prompts import COMMANDS_CONTENT
         expected = [
             'project-plan.md', 'project-act.md', 'project-check.md',
-            'project-done.md', 'project-init.md', 'project-draw.md',
-            'project-trace.md', 'project-doctor.md', 'project-release.md',
+            'project-done.md', 'project-init.md',
+            'project-sprint.md', 'project-hotfix.md', 'project-design.md',
         ]
         for cmd in expected:
             assert cmd in COMMANDS_CONTENT, f'现有命令 {cmd} 丢失'

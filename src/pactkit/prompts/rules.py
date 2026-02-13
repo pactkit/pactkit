@@ -84,6 +84,8 @@ Format: `type(scope): description`
 
     'routing': """# Command Reference (Routing Table)
 
+## Commands (8 user-facing entry points)
+
 ### Init (`/project-init`)
 - **Role**: System Architect
 - **Playbook**: `commands/project-init.md`
@@ -96,11 +98,6 @@ Format: `type(scope): description`
 - **Role**: Senior Developer
 - **Playbook**: `commands/project-act.md`
 
-### Trace (`/project-trace`)
-- **Role**: Code Explorer
-- **Playbook**: `commands/project-trace.md`
-- **Goal**: Deep dive analysis of a specific feature or bug.
-
 ### Check (`/project-check`)
 - **Role**: QA Engineer
 - **Playbook**: `commands/project-check.md`
@@ -110,25 +107,10 @@ Format: `type(scope): description`
 - **Role**: Repo Maintainer
 - **Playbook**: `commands/project-done.md`
 
-### Draw (`/project-draw`)
-- **Role**: Visual Architect
-- **Playbook**: `commands/project-draw.md`
-- **Goal**: Generate Draw.io XML for system architecture visualization.
-
-### Doctor (`/project-doctor`)
-- **Role**: System Medic
-- **Playbook**: `commands/project-doctor.md`
-
 ### Sprint (`/project-sprint`)
 - **Role**: Team Lead (Orchestrator)
 - **Playbook**: `commands/project-sprint.md`
 - **Goal**: Automated PDCA Sprint orchestration via Subagent Team.
-- **Model**: ⚠️ Requires Opus 4.6 (for Sonnet 4, manually execute Plan→Act→Check→Done)
-
-### Review (`/project-review`)
-- **Role**: QA Engineer
-- **Playbook**: `commands/project-review.md`
-- **Goal**: PR Code Review with structured report.
 
 ### Hotfix (`/project-hotfix`)
 - **Role**: Senior Developer
@@ -140,10 +122,16 @@ Format: `type(scope): description`
 - **Playbook**: `commands/project-design.md`
 - **Goal**: Greenfield product design: PRD generation, story decomposition, board setup.
 
-### Status (`/project-status`)
-- **Role**: System Medic
-- **Playbook**: `commands/project-status.md`
-- **Goal**: Project state overview for cold-start orientation.
+## Embedded Skills (auto-invoked by commands above)
+
+| Skill | Embedded In | Purpose |
+|-------|-------------|---------|
+| `pactkit-trace` | Plan Phase 1, Act Phase 1 | Deep code tracing and execution flow analysis |
+| `pactkit-draw` | Plan Phase 2, Design Phase 2 | Generate Draw.io XML architecture diagrams |
+| `pactkit-status` | Init Phase 6, cold-start | Project state overview |
+| `pactkit-doctor` | Init auto-check | Diagnose project health |
+| `pactkit-review` | Check Phase 4 (PR variant) | PR Code Review |
+| `pactkit-release` | Done Phase 3.8 (version release) | Version release: snapshot, archive, Tag |
 """,
 
     'mcp': """# MCP Integration (Conditional)

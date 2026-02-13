@@ -54,24 +54,24 @@ class TestUpgradeAutoMerge:
     def test_missing_command_auto_added(self, tmp_path):
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        # Write yaml with all commands EXCEPT project-status
-        commands = sorted(cfg.VALID_COMMANDS - {'project-status'})
+        # Write yaml with all commands EXCEPT project-design
+        commands = sorted(cfg.VALID_COMMANDS - {'project-design'})
         _write_yaml(yaml_path, {'commands': commands})
 
         added = cfg.auto_merge_config_file(yaml_path)
-        assert any('project-status' in item for item in added)
+        assert any('project-design' in item for item in added)
 
     def test_yaml_file_updated_on_disk(self, tmp_path):
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        commands = sorted(cfg.VALID_COMMANDS - {'project-status'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-design'})
         _write_yaml(yaml_path, {'commands': commands})
 
         cfg.auto_merge_config_file(yaml_path)
 
         # Re-read yaml from disk
         updated = yaml.safe_load(yaml_path.read_text())
-        assert 'project-status' in updated['commands']
+        assert 'project-design' in updated['commands']
 
     def test_missing_agent_auto_added(self, tmp_path):
         cfg = _config()
@@ -104,12 +104,12 @@ class TestUpgradeAutoMerge:
         """After auto_merge, load_config returns the merged list."""
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        commands = sorted(cfg.VALID_COMMANDS - {'project-status'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-design'})
         _write_yaml(yaml_path, {'commands': commands})
 
         cfg.auto_merge_config_file(yaml_path)
         loaded = cfg.load_config(yaml_path)
-        assert 'project-status' in loaded['commands']
+        assert 'project-design' in loaded['commands']
 
 
 # ===========================================================================
@@ -148,7 +148,7 @@ class TestExcludeOptOut:
     def test_exclude_preserved_in_yaml(self, tmp_path):
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        commands = sorted(cfg.VALID_COMMANDS - {'project-sprint', 'project-status'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-sprint', 'project-design'})
         data = {
             'commands': commands,
             'exclude': {'commands': ['project-sprint']},
@@ -159,14 +159,14 @@ class TestExcludeOptOut:
 
         updated = yaml.safe_load(yaml_path.read_text())
         assert 'project-sprint' in updated['exclude']['commands']
-        # project-status was NOT excluded so it should be added
-        assert 'project-status' in updated['commands']
+        # project-design was NOT excluded so it should be added
+        assert 'project-design' in updated['commands']
 
     def test_exclude_some_add_others(self, tmp_path):
         """Exclude one missing item, auto-add the other."""
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        commands = sorted(cfg.VALID_COMMANDS - {'project-sprint', 'project-status'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-sprint', 'project-design'})
         data = {
             'commands': commands,
             'exclude': {'commands': ['project-sprint']},
@@ -174,7 +174,7 @@ class TestExcludeOptOut:
         _write_yaml(yaml_path, data)
 
         added = cfg.auto_merge_config_file(yaml_path)
-        assert any('project-status' in item for item in added)
+        assert any('project-design' in item for item in added)
         assert not any('project-sprint' in item for item in added)
 
 
@@ -188,17 +188,17 @@ class TestMultipleNewComponents:
     def test_two_missing_commands_both_added(self, tmp_path):
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        commands = sorted(cfg.VALID_COMMANDS - {'project-status', 'project-hotfix'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-design', 'project-hotfix'})
         _write_yaml(yaml_path, {'commands': commands})
 
         added = cfg.auto_merge_config_file(yaml_path)
-        assert any('project-status' in item for item in added)
+        assert any('project-design' in item for item in added)
         assert any('project-hotfix' in item for item in added)
 
     def test_each_added_item_has_log_entry(self, tmp_path):
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        commands = sorted(cfg.VALID_COMMANDS - {'project-status', 'project-hotfix'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-design', 'project-hotfix'})
         _write_yaml(yaml_path, {'commands': commands})
 
         added = cfg.auto_merge_config_file(yaml_path)
@@ -210,13 +210,13 @@ class TestMultipleNewComponents:
         yaml_path = tmp_path / 'pactkit.yaml'
         data = {
             'agents': sorted(cfg.VALID_AGENTS - {'code-explorer'}),
-            'commands': sorted(cfg.VALID_COMMANDS - {'project-status'}),
+            'commands': sorted(cfg.VALID_COMMANDS - {'project-design'}),
         }
         _write_yaml(yaml_path, data)
 
         added = cfg.auto_merge_config_file(yaml_path)
         assert any('code-explorer' in item for item in added)
-        assert any('project-status' in item for item in added)
+        assert any('project-design' in item for item in added)
 
 
 # ===========================================================================
@@ -229,7 +229,7 @@ class TestBackwardCompatibility:
     def test_no_exclude_section_works(self, tmp_path):
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
-        commands = sorted(cfg.VALID_COMMANDS - {'project-status'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-design'})
         _write_yaml(yaml_path, {'commands': commands})
 
         # Should not raise
@@ -308,25 +308,25 @@ class TestEdgeCases:
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
         data = {
-            'commands': sorted(cfg.VALID_COMMANDS - {'project-status'}),
+            'commands': sorted(cfg.VALID_COMMANDS - {'project-design'}),
             'exclude': {},
         }
         _write_yaml(yaml_path, data)
 
         added = cfg.auto_merge_config_file(yaml_path)
-        assert any('project-status' in item for item in added)
+        assert any('project-design' in item for item in added)
 
     def test_exclude_empty_list_works(self, tmp_path):
         cfg = _config()
         yaml_path = tmp_path / 'pactkit.yaml'
         data = {
-            'commands': sorted(cfg.VALID_COMMANDS - {'project-status'}),
+            'commands': sorted(cfg.VALID_COMMANDS - {'project-design'}),
             'exclude': {'commands': []},
         }
         _write_yaml(yaml_path, data)
 
         added = cfg.auto_merge_config_file(yaml_path)
-        assert any('project-status' in item for item in added)
+        assert any('project-design' in item for item in added)
 
 
 # ===========================================================================
@@ -343,7 +343,7 @@ class TestDeployerIntegration:
         claude_root.mkdir(parents=True)
         yaml_path = claude_root / 'pactkit.yaml'
         cfg = _config()
-        commands = sorted(cfg.VALID_COMMANDS - {'project-status'})
+        commands = sorted(cfg.VALID_COMMANDS - {'project-design'})
         _write_yaml(yaml_path, {
             'agents': sorted(cfg.VALID_AGENTS),
             'commands': commands,
@@ -356,7 +356,7 @@ class TestDeployerIntegration:
 
         output = capsys.readouterr().out
         assert 'Auto-added' in output
-        assert 'project-status' in output
+        assert 'project-design' in output
 
     def test_deploy_no_merge_message_when_up_to_date(self, tmp_path, capsys):
         from pactkit.generators.deployer import deploy
