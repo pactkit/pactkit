@@ -5,7 +5,7 @@ Tests verify that Draw.io MCP conditional instructions are present in all
 relevant prompt templates (rules, skills, agents, workflows).
 """
 
-from pactkit.prompts import rules, skills, agents, workflows
+from pactkit.prompts import agents, rules, skills, workflows
 
 
 class TestDrawioMcpRule:

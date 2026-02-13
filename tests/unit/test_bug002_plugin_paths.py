@@ -6,18 +6,15 @@ Tests verify that:
 - Plugin commands use ${CLAUDE_PLUGIN_ROOT}/skills/ paths (TC-3)
 - Marketplace inherits plugin path behavior (TC-4)
 """
-import pytest
-from pathlib import Path
-
+from pactkit.config import VALID_AGENTS, VALID_COMMANDS, VALID_SKILLS
 from pactkit.generators.deployer import (
-    _deploy_skills,
-    _deploy_commands,
     _deploy_agents,
-    _deploy_plugin,
-    _deploy_marketplace,
     _deploy_classic,
+    _deploy_commands,
+    _deploy_marketplace,
+    _deploy_plugin,
+    _deploy_skills,
 )
-from pactkit.config import VALID_SKILLS, VALID_COMMANDS, VALID_AGENTS
 
 CLASSIC_PREFIX = "~/.claude/skills/"
 PLUGIN_PREFIX = "${CLAUDE_PLUGIN_ROOT}/skills/"
