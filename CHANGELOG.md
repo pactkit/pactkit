@@ -4,6 +4,16 @@ All notable changes to PactKit will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.1] - 2026-02-13
+
+### Fixed
+- Remove downloads badge — PyPI stats not yet indexed
+- Remove unused import in test_pdca_slim
+
+### Changed
+- Add governance rules and ignore playwright-mcp artifacts
+- Sync pactkit.dev, GitHub metadata, and plugin to PDCA Slim architecture (STORY-012)
+
 ## [1.1.0] - 2026-02-13
 
 ### Added
