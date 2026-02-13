@@ -7,20 +7,20 @@ AGENTS = CLAUDE_DIR / 'agents'
 
 
 # ==============================================================================
-# Scenario 1: project-trace uses call graph
+# Scenario 1: pactkit-trace skill uses call graph
 # ==============================================================================
 class TestProjectTrace:
-    def test_trace_has_call_mode(self):
-        content = (COMMANDS / 'project-trace.md').read_text()
-        assert '--mode call' in content
+    def test_trace_skill_has_call_mode(self):
+        from pactkit.prompts import SKILL_TRACE_MD
+        assert '--mode call' in SKILL_TRACE_MD
 
-    def test_trace_has_entry_param(self):
-        content = (COMMANDS / 'project-trace.md').read_text()
-        assert '--entry' in content
+    def test_trace_skill_has_entry_param(self):
+        from pactkit.prompts import SKILL_TRACE_MD
+        assert '--entry' in SKILL_TRACE_MD
 
-    def test_trace_references_call_graph_mmd(self):
-        content = (COMMANDS / 'project-trace.md').read_text()
-        assert 'call_graph.mmd' in content
+    def test_trace_skill_references_call_graph_mmd(self):
+        from pactkit.prompts import SKILL_TRACE_MD
+        assert 'call_graph.mmd' in SKILL_TRACE_MD
 
 
 # ==============================================================================
@@ -56,12 +56,12 @@ class TestProjectAct:
 
 
 # ==============================================================================
-# Scenario 4: project-doctor class health check
+# Scenario 4: pactkit-doctor skill class health check
 # ==============================================================================
 class TestProjectDoctor:
-    def test_doctor_has_class_mode(self):
-        content = (COMMANDS / 'project-doctor.md').read_text()
-        assert '--mode class' in content
+    def test_doctor_skill_has_class_mode(self):
+        from pactkit.prompts import SKILL_DOCTOR_MD
+        assert '--mode class' in SKILL_DOCTOR_MD
 
 
 # ==============================================================================

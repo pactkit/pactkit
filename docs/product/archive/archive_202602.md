@@ -71,3 +71,14 @@
 - [x] Update deployer to deploy 9 skills
 - [x] Add deprecation warnings for removed commands in load_config
 - [x] Update all count-based tests
+
+### [STORY-012] Docs Sync — 同步文档站和 GitHub 元数据至 PDCA Slim 架构
+> Spec: docs/specs/STORY-012.md
+
+- [x] Update pactkit/pactkit GitHub repo description
+- [x] Update index.mdx (At a Glance counts + links)
+- [x] Rewrite commands.mdx (8 commands, remove 6 old entries)
+- [x] Update skills.mdx (add 6 new prompt-only skills)
+- [x] Update installation.mdx and configuration.mdx counts
+- [x] Update workflow.mdx trace reference
+- [x] Regenerate claude-code-plugin with pactkit init --format marketplace
