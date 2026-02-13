@@ -164,7 +164,11 @@ class TestImportSyntaxParseable:
         content = (tmp_path / '.claude' / 'CLAUDE.md').read_text()
         for line in content.strip().splitlines():
             if line.strip().startswith('@'):
-                # 提取路径，将 ~ 替换为 tmp_path
                 ref_path = line.strip().lstrip('@')
+                # Skip project-relative imports (e.g., @./docs/product/context.md)
+                # — these resolve at runtime in the user's project, not in ~/.claude/
+                if ref_path.startswith('./'):
+                    continue
+                # 提取路径，将 ~ 替换为 tmp_path
                 resolved = Path(ref_path.replace('~/.claude', str(tmp_path / '.claude')))
                 assert resolved.is_file(), f'@import 引用的 {ref_path} 不存在 (resolved: {resolved})'

@@ -11,3 +11,14 @@
 - [x] Write unit tests for marketplace mode deployment
 - [x] Verify classic mode unchanged — all existing tests pass
 - [x] Integration test: claude --plugin-dir loads generated plugin
+
+### [STORY-006] Session Context Protocol — 跨会话项目状态自动感知
+> Spec: docs/specs/STORY-006.md
+
+- [x] Add context.md generation to Done playbook
+- [x] Add context.md generation to Plan playbook
+- [x] Add context.md generation to Init playbook
+- [x] Add @context.md reference to CLAUDE_MD_TEMPLATE
+- [x] Add lessons.md auto-append to Done playbook
+- [x] Write unit tests for prompt changes
+- [x] Verify plugin mode inline CLAUDE.md unaffected

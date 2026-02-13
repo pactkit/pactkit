@@ -1,0 +1,46 @@
+graph TD
+    subgraph "Deployment Layer"
+        CLI["cli.py<br/>pactkit init/update"]
+        Deployer["deployer.py<br/>classic/plugin/marketplace"]
+        Config["config.py<br/>pactkit.yaml"]
+    end
+
+    subgraph "Prompt Layer (Constitution)"
+        Rules["rules.py<br/>6 modules"]
+        Commands["commands.py<br/>14 command playbooks"]
+        Agents["agents.py<br/>9 agent roles"]
+        Workflows["workflows.py<br/>PDCA + references"]
+        Skills["skills.py<br/>3 skill definitions"]
+    end
+
+    subgraph "Runtime Skills"
+        Board["board.py<br/>Sprint Board ops"]
+        Visualize["visualize.py<br/>Code graphs"]
+        Scaffold["scaffold.py<br/>File scaffolding"]
+    end
+
+    subgraph "Cross-Session Memory (NEW)"
+        Context["context.md<br/>Auto-generated project state"]
+        Lessons["lessons.md<br/>Auto-appended decisions"]
+        Specs["docs/specs/*.md<br/>Durable requirements"]
+        BoardFile["sprint_board.md<br/>Progress tracking"]
+        MemoryMCP["Memory MCP<br/>Knowledge graph"]
+    end
+
+    CLI --> Deployer
+    CLI --> Config
+    Deployer --> Rules
+    Deployer --> Commands
+    Deployer --> Agents
+    Deployer --> Skills
+
+    Commands -->|"Done/Plan/Init<br/>generate"| Context
+    Commands -->|"Done<br/>auto-append"| Lessons
+    Commands -->|"Plan<br/>create"| Specs
+    Commands -->|"Act/Done<br/>update"| BoardFile
+    Commands -->|"Plan/Act/Done<br/>conditional"| MemoryMCP
+
+    Rules -->|"CLAUDE.md @import"| Context
+
+    style Context fill:#f9f,stroke:#333,stroke-width:2px
+    style Lessons fill:#f9f,stroke:#333,stroke-width:2px

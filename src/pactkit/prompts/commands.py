@@ -63,7 +63,13 @@ allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 3.  **Memory MCP (Conditional)**: IF `mcp__memory__create_entities` tool is available, store the design context:
     - Use `mcp__memory__create_entities` with: `name: "{STORY_ID}"`, `entityType: "story"`, `observations: [key architectural decisions, target files, design rationale]`
     - IF this story depends on other stories, use `mcp__memory__create_relations` to record dependencies (e.g., `from: "{STORY_ID}", to: "STORY-XXX", relationType: "depends_on"`)
-4.  **Handover**: "Trace complete. Spec created. Ready for Act."
+4.  **Session Context Update**: Update `docs/product/context.md` to reflect the new Story:
+    - Read `docs/product/sprint_board.md` (now containing the new Story)
+    - Read `docs/architecture/governance/lessons.md` (last 5 entries)
+    - Run `git branch --list 'feature/*' 'fix/*'`
+    - Write `docs/product/context.md` using the standard format (see `/project-done` Phase 4.5 for format)
+    - Set "Last updated by" to `/project-plan`
+5.  **Handover**: "Trace complete. Spec created. Ready for Act."
 """,
 
     # [FIX] Added Board Update Step to Phase 4
@@ -319,7 +325,12 @@ IF `pytest-cov` is available, run tests with coverage on changed source files:
 2.  **Auto-Fix**:
     - If tests are GREEN but tasks are `[ ]`, **Ask the user**: "Tests passed but tasks are unchecked. Mark as done?"
     - If user agrees, update `sprint_board.md` immediately.
-3.  **Memory MCP (Conditional)**: IF `mcp__memory__add_observations` tool is available, record lessons learned:
+3.  **Lessons Auto-append (MANDATORY)**: Append a new row to `docs/architecture/governance/lessons.md`:
+    - Format: `| {YYYY-MM-DD} | {one-line summary of what was learned} | {STORY_ID} |`
+    - Date: today's date
+    - Summary: one sentence describing the key insight, pattern, or pitfall from this Story
+    - This is NOT conditional on Memory MCP — always append to lessons.md
+4.  **Memory MCP (Conditional)**: IF `mcp__memory__add_observations` tool is available, record lessons learned:
     - Use `mcp__memory__add_observations` on the `{STORY_ID}` entity with: implementation patterns used, pitfalls encountered, key files modified, and any non-obvious decisions made during implementation
     - This builds a cumulative project knowledge base that persists across sessions
 
@@ -339,6 +350,36 @@ IF `pytest-cov` is available, run tests with coverage on changed source files:
 ## 🎬 Phase 4: Git Commit
 1.  **Format**: `feat(scope): <title from spec>`
 2.  **Execute**: Run the git commit command.
+
+## 🎬 Phase 4.5: Session Context Update
+> **Purpose**: Generate `docs/product/context.md` so the next session auto-loads project state.
+1.  **Read Board**: Read `docs/product/sprint_board.md` and extract:
+    - Stories in 🔄 In Progress (with IDs and titles)
+    - Stories in 📋 Backlog (count)
+    - Stories in ✅ Done (most recent 3, with IDs and titles)
+2.  **Read Lessons**: Read `docs/architecture/governance/lessons.md` and extract the last 5 entries.
+3.  **Active Branches**: Run `git branch --list 'feature/*' 'fix/*'` to list active branches.
+4.  **Write Context**: Write `docs/product/context.md` with this format:
+    ```markdown
+    # Project Context (Auto-generated)
+    > Last updated: {ISO timestamp} by /project-done
+
+    ## Sprint Status
+    {In Progress stories with IDs | Backlog count | Done count}
+
+    ## Recent Completions
+    {Last 3 completed stories, one line each}
+
+    ## Active Branches
+    {git branch output, or "None" if no feature/fix branches}
+
+    ## Key Decisions
+    {Last 5 lessons from lessons.md}
+
+    ## Next Recommended Action
+    {If In Progress stories exist: `/project-act STORY-XXX` | If only Backlog: `/project-plan` | If board empty: `/project-design`}
+    ```
+5.  **Commit Context**: `git add docs/product/context.md && git commit --amend --no-edit` to include context.md in the commit.
 """,
 
     "project-init.md": """---
@@ -386,7 +427,15 @@ allowed-tools: [Read, Write, Edit, Bash, Glob]
 1.  **Law**: Write `docs/architecture/governance/rules.md`.
 2.  **History**: Write `docs/architecture/governance/lessons.md`.
 
-## 🎬 Phase 6: Handover
+## 🎬 Phase 6: Session Context Bootstrap
+1.  **Generate Context**: Write `docs/product/context.md` with initial project state:
+    - Read `docs/product/sprint_board.md` (likely empty for new projects)
+    - Read `docs/architecture/governance/lessons.md` (last 5 entries)
+    - Run `git branch --list 'feature/*' 'fix/*'`
+    - Write `docs/product/context.md` using the standard format (see `/project-done` Phase 4.5 for format)
+    - Set "Last updated by" to `/project-init`
+
+## 🎬 Phase 7: Handover
 1.  **Output**: "✅ PactKit Initialized. Reality Graph captured. Knowledge Base ready."
 2.  **Advice**: "⚠️ IMPORTANT: Run `/project-plan 'Reverse engineer'` to align the HLD."
 """,

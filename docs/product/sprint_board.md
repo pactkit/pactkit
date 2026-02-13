@@ -2,6 +2,23 @@
 
 ## 📋 Backlog
 
+### [STORY-007] /project-status 冷启动项目状态感知命令
+> Spec: docs/specs/STORY-007.md
+
+- [ ] Add project-status.md playbook to commands.py
+- [ ] Add to VALID_COMMANDS and routing table
+- [ ] Write unit tests for new command content
+- [ ] Verify non-initialized project fallback
+
+### [STORY-008] Constitution Sharpening — 删除伪优势强化治理规则
+> Spec: docs/specs/STORY-008.md
+
+- [ ] Remove pseudo-advantages from 01-core-protocol
+- [ ] Add Session Context rule to core protocol
+- [ ] Strengthen Hierarchy of Truth wording
+- [ ] Update tests for changed rule content
+- [ ] Verify token reduction >= 30%
+
 ## 🔄 In Progress
 
 ## ✅ Done

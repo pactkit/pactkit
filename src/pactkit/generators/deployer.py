@@ -267,6 +267,8 @@ def _deploy_claude_md(claude_root, enabled_rules):
         if filename:
             lines.append(f"@~/.claude/rules/{filename}")
 
+    lines.append("")
+    lines.append("@./docs/product/context.md")
     lines.append("")  # trailing newline
     atomic_write(claude_root / "CLAUDE.md", "\n".join(lines))
 
@@ -388,6 +390,11 @@ def _deploy_claude_md_inline(plugin_root):
         module_content = prompts.RULES_MODULES[key].strip()
         lines.append(module_content)
         lines.append("")  # blank line between modules
+
+    # Add TIP for cross-session context (plugin mode has no context.md by default)
+    lines.append("> **TIP**: Run `/project-init` to set up project governance"
+                 " and enable cross-session context.")
+    lines.append("")
 
     atomic_write(plugin_root / "CLAUDE.md", "\n".join(lines))
 

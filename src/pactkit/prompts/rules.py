@@ -220,6 +220,8 @@ CLAUDE_MD_TEMPLATE = """# PactKit Global Constitution (v23.0 Modular)
 @~/.claude/rules/04-routing-table.md
 @~/.claude/rules/05-workflow-conventions.md
 @~/.claude/rules/06-mcp-integration.md
+
+@./docs/product/context.md
 """
 
 # Backward-compatible: combine all modules for anything that still reads this
