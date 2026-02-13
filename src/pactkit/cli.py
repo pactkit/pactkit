@@ -43,7 +43,7 @@ def main():
 
     if args.command in ("init", "update"):
         from pactkit.generators.deployer import deploy
-        deploy()
+        deploy(target=args.target)
 
     elif args.command == "version":
         print(f"PactKit v{__version__}")

@@ -2,21 +2,21 @@
 
 ## 📋 Backlog
 
-### STORY-002: Selective Deployment — Deployer 按 Config 过滤部署
-- [ ] Modify `deploy()` to accept and use config parameter
-- [ ] Implement selective agent deployment with cleanup
-- [ ] Implement selective command deployment with cleanup
-- [ ] Implement selective skill deployment
-- [ ] Implement selective rule deployment and dynamic CLAUDE.md generation
-- [ ] Generate `pactkit.yaml` on first `pactkit init`
-- [ ] Update `cli.py` to load config and pass to deployer
-- [ ] Add deployment summary output
-- [ ] Write unit tests for selective deployment
-- [ ] Integration test: partial config end-to-end
-
 ## 🔄 In Progress
 
 ## ✅ Done
+
+### STORY-002: Selective Deployment — Deployer 按 Config 过滤部署
+- [x] Modify `deploy()` to accept and use config parameter
+- [x] Implement selective agent deployment with cleanup
+- [x] Implement selective command deployment with cleanup
+- [x] Implement selective skill deployment
+- [x] Implement selective rule deployment and dynamic CLAUDE.md generation
+- [x] Generate `pactkit.yaml` on first `pactkit init`
+- [x] Update `cli.py` to load config and pass to deployer
+- [x] Add deployment summary output
+- [x] Write unit tests for selective deployment
+- [x] Integration test: partial config end-to-end
 
 ### STORY-001: Config Schema — pactkit.yaml 加载、验证、默认值
 - [x] Create `src/pactkit/config.py` with load/validate/default/generate functions

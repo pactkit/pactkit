@@ -8,15 +8,43 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from pactkit import prompts
+from pactkit.config import (
+    VALID_AGENTS,
+    VALID_COMMANDS,
+    VALID_RULES,
+    VALID_SKILLS,
+    generate_default_yaml,
+    get_default_config,
+    load_config,
+    validate_config,
+)
 from pactkit.skills import load_script
 from pactkit.utils import atomic_write
 
 
-def deploy(mode="expert"):
-    print("🚀 PactKit DevOps Deployment (v20.0 - EXPERT Mode)")
+def deploy(config=None, target=None, **_kwargs):
+    """Deploy PactKit configuration.
 
-    # 1. 准备目录
-    claude_root = Path.home() / ".claude"
+    Args:
+        config: Optional config dict. If None, loads from pactkit.yaml or defaults.
+        target: Optional target directory. If None, uses ~/.claude.
+    """
+    # Resolve target directory
+    if target is not None:
+        claude_root = Path(target)
+    else:
+        claude_root = Path.home() / ".claude"
+
+    # Load config if not provided
+    if config is None:
+        yaml_path = claude_root / "pactkit.yaml"
+        config = load_config(yaml_path)
+
+    validate_config(config)
+
+    print("🚀 PactKit DevOps Deployment")
+
+    # Prepare directories
     agents_dir = claude_root / "agents"
     commands_dir = claude_root / "commands"
     skills_dir = claude_root / "skills"
@@ -24,21 +52,37 @@ def deploy(mode="expert"):
     for d in [claude_root, agents_dir, commands_dir, skills_dir]:
         d.mkdir(parents=True, exist_ok=True)
 
-    # 2. 部署 Skills (v20.0 Compliant Skill Structure)
-    _deploy_skills(skills_dir)
+    # Deploy components filtered by config
+    enabled_skills = config.get('skills', [])
+    enabled_rules = config.get('rules', [])
+    enabled_agents = config.get('agents', [])
+    enabled_commands = config.get('commands', [])
 
-    # 3. 清理旧文件
+    n_skills = _deploy_skills(skills_dir, enabled_skills)
     _cleanup_legacy(skills_dir)
+    n_rules = _deploy_rules(claude_root, enabled_rules)
+    _deploy_claude_md(claude_root, enabled_rules)
+    n_agents = _deploy_agents(agents_dir, enabled_agents)
+    n_commands = _deploy_commands(commands_dir, enabled_commands)
 
-    # 4. 部署 Expert 配置
-    _deploy_expert(claude_root, agents_dir, commands_dir)
+    # Generate pactkit.yaml if it doesn't exist
+    _generate_config_if_missing(claude_root)
 
-    print("\n🎉 Deployment Complete.")
+    # Summary
+    total_agents = len(VALID_AGENTS)
+    total_commands = len(VALID_COMMANDS)
+    total_skills = len(VALID_SKILLS)
+    total_rules = len(VALID_RULES)
+
+    print(f"\n✅ Deployed: {n_agents}/{total_agents} Agents, "
+          f"{n_commands}/{total_commands} Commands, "
+          f"{n_skills}/{total_skills} Skills, "
+          f"{n_rules}/{total_rules} Rules")
 
 
-def _deploy_skills(skills_dir):
-    """部署合规的 Skill 目录结构"""
-    skill_defs = [
+def _deploy_skills(skills_dir, enabled_skills):
+    """Deploy skill directories filtered by config."""
+    all_skill_defs = [
         {
             'name': 'pactkit-visualize',
             'skill_md': prompts.SKILL_VISUALIZE_MD,
@@ -59,74 +103,96 @@ def _deploy_skills(skills_dir):
         },
     ]
 
-    for sd in skill_defs:
+    enabled_set = set(enabled_skills)
+    deployed = 0
+    for sd in all_skill_defs:
+        if sd['name'] not in enabled_set:
+            continue
         skill_dir = skills_dir / sd['name']
         scripts_dir = skill_dir / 'scripts'
         scripts_dir.mkdir(parents=True, exist_ok=True)
 
         atomic_write(skill_dir / 'SKILL.md', sd['skill_md'])
         atomic_write(scripts_dir / sd['script_name'], sd['script_source'])
+        deployed += 1
 
-    print(f"✅ Deployed {len(skill_defs)} Skills (Compliant Structure)")
+    return deployed
 
 
 def _cleanup_legacy(skills_dir):
-    """清理旧的 pactkit_tools.py"""
+    """Clean up legacy pactkit_tools.py."""
     legacy = skills_dir / 'pactkit_tools.py'
     if legacy.exists():
         legacy.unlink()
-        print(f"🧹 Removed legacy: {legacy}")
 
 
-def _deploy_rules(claude_root):
-    """部署模块化规则到 ~/.claude/rules/，保护用户自定义文件"""
+def _deploy_rules(claude_root, enabled_rules):
+    """Deploy rule modules filtered by config."""
     rules_dir = claude_root / "rules"
     rules_dir.mkdir(parents=True, exist_ok=True)
 
-    # 清理受管理的文件（01-04 前缀），保留用户文件（10+）
+    enabled_set = set(enabled_rules)
+
+    # Build reverse map: rule identifier -> (key, filename)
+    # e.g. '01-core-protocol' -> ('core', '01-core-protocol.md')
+    rule_id_to_key = {}
+    for key, filename in prompts.RULES_FILES.items():
+        rule_id = filename.removesuffix('.md')
+        rule_id_to_key[rule_id] = key
+
+    # Clean managed rule files
     for f in rules_dir.glob('*.md'):
         if any(f.name.startswith(p) for p in prompts.RULES_MANAGED_PREFIXES):
             f.unlink()
 
-    # 写入规则模块
-    for key, filename in prompts.RULES_FILES.items():
+    # Write only enabled rules
+    deployed = 0
+    for rule_id in enabled_rules:
+        key = rule_id_to_key.get(rule_id)
+        if key is None:
+            continue
+        filename = prompts.RULES_FILES[key]
         atomic_write(rules_dir / filename, prompts.RULES_MODULES[key])
+        deployed += 1
 
-    print(f"✅ Deployed {len(prompts.RULES_FILES)} Rule Modules")
-
-
-def _cleanup_managed(directory, managed_names, prefix=None):
-    """清理受管理文件，保留用户自定义文件。
-
-    Args:
-        directory: 目标目录
-        managed_names: 受管理的文件名集合（含扩展名）
-        prefix: 如果提供，按前缀匹配清理；否则按 managed_names 精确匹配
-    """
-    if not directory.exists():
-        return
-    for f in directory.glob('*.md'):
-        if prefix and f.name.startswith(prefix):
-            f.unlink()
-        elif not prefix and f.name in managed_names:
-            f.unlink()
+    return deployed
 
 
-def _deploy_expert(claude_root, agents_dir, commands_dir):
-    # 部署模块化规则
-    _deploy_rules(claude_root)
+def _deploy_claude_md(claude_root, enabled_rules):
+    """Generate CLAUDE.md with @import only for enabled rules."""
+    # Build reverse map: rule identifier -> filename
+    rule_id_to_filename = {}
+    for key, filename in prompts.RULES_FILES.items():
+        rule_id = filename.removesuffix('.md')
+        rule_id_to_filename[rule_id] = filename
 
-    # 部署精简版 CLAUDE.md（@import 引用）
-    atomic_write(claude_root / "CLAUDE.md", prompts.CLAUDE_MD_TEMPLATE)
-    print("✅ Constitution Updated (Modular)")
+    lines = ["# PactKit Global Constitution (v23.0 Modular)", ""]
+    for rule_id in sorted(enabled_rules):
+        filename = rule_id_to_filename.get(rule_id)
+        if filename:
+            lines.append(f"@~/.claude/rules/{filename}")
 
-    # 清理旧的受管理 Agent 文件，保留用户自定义 Agent
+    lines.append("")  # trailing newline
+    atomic_write(claude_root / "CLAUDE.md", "\n".join(lines))
+
+
+def _deploy_agents(agents_dir, enabled_agents):
+    """Deploy agent definitions filtered by config."""
+    enabled_set = set(enabled_agents)
+
+    # Clean up managed agent files not in enabled set
     managed_agent_files = {f"{name}.md" for name in prompts.AGENTS_EXPERT}
-    _cleanup_managed(agents_dir, managed_agent_files)
+    if agents_dir.exists():
+        for f in agents_dir.glob('*.md'):
+            if f.name in managed_agent_files and f.stem not in enabled_set:
+                f.unlink()
 
-    # 部署 Agents (满血版 + 高级字段)
+    # Deploy enabled agents
     OPTIONAL_FIELDS = ['permissionMode', 'disallowedTools', 'maxTurns', 'memory', 'skills']
+    deployed = 0
     for name, cfg in prompts.AGENTS_EXPERT.items():
+        if name not in enabled_set:
+            continue
         agent_path = agents_dir / f"{name}.md"
         content = [
             "---",
@@ -146,12 +212,39 @@ def _deploy_expert(claude_root, agents_dir, commands_dir):
             "Please refer to ~/.claude/CLAUDE.md for routing."
         ])
         atomic_write(agent_path, "\n".join(content))
-    print(f"✅ Deployed {len(prompts.AGENTS_EXPERT)} Expert Agents")
+        deployed += 1
 
-    # 清理旧的受管理 Command 文件，保留用户自定义命令
-    _cleanup_managed(commands_dir, set(), prefix="project-")
+    return deployed
 
-    # 部署 Commands (满血版)
+
+def _deploy_commands(commands_dir, enabled_commands):
+    """Deploy command playbooks filtered by config."""
+    enabled_set = set(enabled_commands)
+
+    # Build map: command name -> filename
+    # e.g. 'project-plan' -> 'project-plan.md'
+    enabled_filenames = {f"{cmd}.md" for cmd in enabled_commands}
+
+    # Clean managed command files not in enabled set
+    if commands_dir.exists():
+        for f in commands_dir.glob('*.md'):
+            if f.name.startswith("project-") and f.name not in enabled_filenames:
+                f.unlink()
+
+    # Deploy enabled commands
+    deployed = 0
     for filename, content in prompts.COMMANDS_CONTENT.items():
+        cmd_name = filename.removesuffix('.md')
+        if cmd_name not in enabled_set:
+            continue
         atomic_write(commands_dir / filename, content)
-    print(f"✅ Deployed {len(prompts.COMMANDS_CONTENT)} Command Playbooks")
+        deployed += 1
+
+    return deployed
+
+
+def _generate_config_if_missing(claude_root):
+    """Generate pactkit.yaml with defaults if it doesn't exist."""
+    yaml_path = claude_root / "pactkit.yaml"
+    if not yaml_path.exists():
+        atomic_write(yaml_path, generate_default_yaml())
