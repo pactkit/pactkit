@@ -82,3 +82,11 @@
 - [x] Update installation.mdx and configuration.mdx counts
 - [x] Update workflow.mdx trace reference
 - [x] Regenerate claude-code-plugin with pactkit init --format marketplace
+
+### [BUG-001] Scripted Skill Prompts Use Wrong Script Path
+> Spec: docs/specs/BUG-001.md
+
+- [x] Update SKILL_VISUALIZE_MD path references (R1)
+- [x] Update SKILL_BOARD_MD path references (R1)
+- [x] Update SKILL_SCAFFOLD_MD path references (R1)
+- [x] Verify existing tests pass (R5)

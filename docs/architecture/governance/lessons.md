@@ -13,3 +13,4 @@
 | 2026-02 | Demoting commands to skills is a prompt-only refactor (no Python scripts needed for prompt-only skills) — but updating 25+ test files with hardcoded counts is the real cost; prefer data-driven assertions | STORY-011 |
 | 2026-02 | Multi-repo docs sync is cheap via gh CLI + git clone/push — but tests reading deployed files (not source) can hide regressions until redeployment | STORY-012 |
 | 2026-02 | Integrating an external MCP server is a prompt-only change — add conditional instructions to rules, skills, agents, and workflows; no runtime code needed. The conditional pattern (IF tool available → use it; ELSE → fallback) is now proven across 6 MCP integrations | STORY-013 |
+| 2026-02 | Skill SKILL.md prompts must use absolute paths for script invocations — the LLM runs bash from project cwd, not the skill base directory; match the pattern already used in workflows.py and commands.py (~/.claude/skills/{name}/scripts/{script}.py) | BUG-001 |
